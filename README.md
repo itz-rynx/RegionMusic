@@ -466,7 +466,3 @@ Dự án này được cấp phép theo MIT License.
 
 ---
 
-Made with ❤️ for the Minecraft community
-
-Được tạo với ❤️ cho cộng đồng Minecraft
-
