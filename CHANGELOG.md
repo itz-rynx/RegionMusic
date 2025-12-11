@@ -6,6 +6,42 @@ Tất cả các thay đổi đáng chú ý của RegionMusic sẽ được ghi l
 
 ---
 
+## [1.7] - 2024
+
+### Added / Thêm mới
+- ✨ **Volume Control**: Thêm khả năng tùy chỉnh volume (âm lượng) cho từng bài nhạc trong `musics.yml`
+- ✨ **Pitch Control**: Thêm khả năng tùy chỉnh pitch (cao độ) cho từng bài nhạc trong `musics.yml`
+
+### Changed / Thay đổi
+- 📝 **Config**: Thêm field `volume` (0.0 - 1.0, mặc định: 1.0) và `pitch` (0.5 - 2.0, mặc định: 1.0) vào `musics.yml`
+- 🔧 **Sound Playback**: Cập nhật `playSound()` để sử dụng volume và pitch từ config thay vì hardcode
+
+### Technical / Kỹ thuật
+- 🔨 **Code**: Thêm Map `musicVolumeMap` và `musicPitchMap` trong `RegionConfigManager` để lưu trữ volume và pitch
+- 🔨 **Code**: Thêm method `getVolumeForMusic()` và `getPitchForMusic()` trong `RegionConfigManager`
+- 🔨 **Code**: Cập nhật `playSound()` để nhận volume và pitch làm tham số
+- 🔨 **Code**: Thêm validation để giới hạn volume trong khoảng 0.0 - 1.0 và pitch trong khoảng 0.5 - 2.0
+
+---
+
+## [1.6] - 2024
+
+### Changed / Thay đổi
+- 🔒 **Permissions**: Tách permission riêng cho từng lệnh thay vì chỉ có `regionmusic.admin`
+  - `regionmusic.reload` - Cho phép sử dụng `/regionmusic reload`
+  - `regionmusic.playmusic` - Cho phép sử dụng `/regionmusic playmusic`
+  - `regionmusic.stopmusic` - Cho phép sử dụng `/regionmusic stopmusic`
+  - `regionmusic.togglemusic` - Cho phép sử dụng `/regionmusic togglemusic`
+  - `regionmusic.nextsong` - Cho phép sử dụng `/regionmusic nextsong`
+  - `regionmusic.about` - Cho phép sử dụng `/regionmusic about`
+  - `regionmusic.admin` - Permission cha bao gồm tất cả các permission trên (backward compatible)
+
+### Technical / Kỹ thuật
+- 🔨 **Code**: Cập nhật `RegionMusicCommand` để kiểm tra permission riêng cho từng lệnh
+- 🔨 **Code**: Cập nhật `plugin.yml` để định nghĩa các permission mới với parent permission
+
+---
+
 ## [1.5] - 2024
 
 ### Added / Thêm mới

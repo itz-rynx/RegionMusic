@@ -25,11 +25,6 @@ public class RegionMusicCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         org.rynx.regionMusic.manager.MessageManager msgManager = plugin.getMessageManager();
         
-        if (!sender.hasPermission("regionmusic.admin")) {
-            sender.sendMessage(msgManager.getMessage("no-permission"));
-            return true;
-        }
-        
         if (args.length == 0) {
             sender.sendMessage(msgManager.getMessage("usage"));
             return true;
@@ -39,6 +34,10 @@ public class RegionMusicCommand implements CommandExecutor {
         
         switch (subCommand) {
             case "about":
+                if (!sender.hasPermission("regionmusic.about") && !sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
                 @SuppressWarnings("deprecation")
                 org.bukkit.plugin.PluginDescriptionFile desc = plugin.getDescription();
                 String author = desc.getAuthors().isEmpty() ? "rynx" : String.join(", ", desc.getAuthors());
@@ -56,12 +55,20 @@ public class RegionMusicCommand implements CommandExecutor {
                 break;
                 
             case "reload":
+                if (!sender.hasPermission("regionmusic.reload") && !sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
                 configManager.reload();
                 msgManager.reload();
                 sender.sendMessage(msgManager.getMessage("reload-success"));
                 break;
                 
             case "playmusic":
+                if (!sender.hasPermission("regionmusic.playmusic") && !sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(msgManager.getMessage("player-only"));
                     return true;
@@ -77,6 +84,10 @@ public class RegionMusicCommand implements CommandExecutor {
                 break;
                 
             case "stopmusic":
+                if (!sender.hasPermission("regionmusic.stopmusic") && !sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(msgManager.getMessage("player-only"));
                     return true;
@@ -91,6 +102,10 @@ public class RegionMusicCommand implements CommandExecutor {
                 break;
                 
             case "togglemusic":
+                if (!sender.hasPermission("regionmusic.togglemusic") && !sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(msgManager.getMessage("player-only"));
                     return true;
@@ -117,6 +132,10 @@ public class RegionMusicCommand implements CommandExecutor {
                 break;
                 
             case "nextsong":
+                if (!sender.hasPermission("regionmusic.nextsong") && !sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(msgManager.getMessage("player-only"));
                     return true;

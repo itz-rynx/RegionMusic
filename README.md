@@ -1,6 +1,6 @@
 # RegionMusic
 
-[![Version](https://img.shields.io/badge/version-1.5-blue.svg)](https://github.com/rynx/RegionMusic)
+[![Version](https://img.shields.io/badge/version-1.7-blue.svg)](https://github.com/rynx/RegionMusic)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.5-green.svg)](https://www.minecraft.net/)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Author](https://img.shields.io/badge/author-rynx-purple.svg)](https://github.com/rynx)
@@ -125,22 +125,30 @@ messages:
 
 | Command | Description | Permission |
 |---------|-------------|------------|
-| `/regionmusic reload` | Reload configuration files | `regionmusic.admin` |
-| `/regionmusic playmusic` | Manually play music for current region | `regionmusic.admin` |
-| `/regionmusic stopmusic` | Stop currently playing music | `regionmusic.admin` |
-| `/regionmusic togglemusic` | Toggle music on/off | `regionmusic.admin` |
-| `/regionmusic nextsong` | Skip to next song in playlist | `regionmusic.admin` |
-| `/regionmusic about` | Show plugin information | `regionmusic.admin` |
-| `/rm` | Alias for `/regionmusic` | `regionmusic.admin` |
+| `/regionmusic reload` | Reload configuration files | `regionmusic.reload` or `regionmusic.admin` |
+| `/regionmusic playmusic` | Manually play music for current region | `regionmusic.playmusic` or `regionmusic.admin` |
+| `/regionmusic stopmusic` | Stop currently playing music | `regionmusic.stopmusic` or `regionmusic.admin` |
+| `/regionmusic togglemusic` | Toggle music on/off | `regionmusic.togglemusic` or `regionmusic.admin` |
+| `/regionmusic nextsong` | Skip to next song in playlist | `regionmusic.nextsong` or `regionmusic.admin` |
+| `/regionmusic about` | Show plugin information | `regionmusic.about` or `regionmusic.admin` |
+| `/rm` | Alias for `/regionmusic` | Same as `/regionmusic` |
 | `/togglemusic` | Toggle music on/off (for all players) | None |
 
 ## Permissions
 
 | Permission | Description | Default |
 |-----------|-------------|---------|
-| `regionmusic.admin` | Access to all `/regionmusic` commands | OP |
+| `regionmusic.admin` | Access to all `/regionmusic` commands (parent permission) | OP |
+| `regionmusic.reload` | Access to `/regionmusic reload` command | OP |
+| `regionmusic.playmusic` | Access to `/regionmusic playmusic` command | OP |
+| `regionmusic.stopmusic` | Access to `/regionmusic stopmusic` command | OP |
+| `regionmusic.togglemusic` | Access to `/regionmusic togglemusic` command | OP |
+| `regionmusic.nextsong` | Access to `/regionmusic nextsong` command | OP |
+| `regionmusic.about` | Access to `/regionmusic about` command | OP |
 
-**Note**: `/togglemusic` command is available to all players without permission.
+**Note**: 
+- `/togglemusic` command is available to all players without permission.
+- `regionmusic.admin` is a parent permission that includes all sub-permissions. You can grant individual permissions for fine-grained control.
 
 ## Usage Examples
 
@@ -261,14 +269,20 @@ musics:
     sound: MUSIC_DISC_CAT        # Tên âm thanh vanilla
     interval: 185                 # Thời lượng tính bằng giây
     name: "Spawn Theme"           # Tên hiển thị (tùy chọn, mặc định dùng tên key)
+    volume: 1.0                   # Âm lượng (0.0 - 1.0, mặc định: 1.0)
+    pitch: 1.0                    # Cao độ (0.5 - 2.0, mặc định: 1.0)
   custommusic:
     sound: records.cat            # Âm thanh tùy chỉnh (ItemsAdder, v.v.)
     interval: 185
     name: "Custom Music"          # Tên hiển thị (tùy chọn)
+    volume: 1.0                   # Âm lượng (tùy chọn)
+    pitch: 1.0                    # Cao độ (tùy chọn)
   boss:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
     name: "Boss Battle"           # Tên hiển thị (tùy chọn)
+    volume: 1.0                   # Âm lượng (tùy chọn)
+    pitch: 1.0                    # Cao độ (tùy chọn)
 ```
 
 **Định dạng Sound:**
@@ -278,6 +292,10 @@ musics:
 **Tên hiển thị:**
 - Field `name` là tùy chọn - nếu không có, sẽ dùng tên key làm tên hiển thị
 - Tên hiển thị được dùng trong thông báo "Đang phát bài"
+
+**Âm lượng và Cao độ:**
+- Field `volume` là tùy chọn (mặc định: 1.0) - điều khiển âm lượng (0.0 = im lặng, 1.0 = đầy đủ)
+- Field `pitch` là tùy chọn (mặc định: 1.0) - điều khiển cao độ (0.5 = nửa tốc độ, 1.0 = bình thường, 2.0 = gấp đôi tốc độ)
 
 ### lang.yml
 
@@ -297,22 +315,30 @@ messages:
 
 | Lệnh | Mô tả | Quyền |
 |------|-------|-------|
-| `/regionmusic reload` | Tải lại các file cấu hình | `regionmusic.admin` |
-| `/regionmusic playmusic` | Phát nhạc thủ công cho region hiện tại | `regionmusic.admin` |
-| `/regionmusic stopmusic` | Dừng nhạc đang phát | `regionmusic.admin` |
-| `/regionmusic togglemusic` | Bật/tắt nhạc | `regionmusic.admin` |
-| `/regionmusic nextsong` | Chuyển sang bài nhạc tiếp theo | `regionmusic.admin` |
-| `/regionmusic about` | Hiển thị thông tin plugin | `regionmusic.admin` |
-| `/rm` | Alias cho `/regionmusic` | `regionmusic.admin` |
+| `/regionmusic reload` | Tải lại các file cấu hình | `regionmusic.reload` hoặc `regionmusic.admin` |
+| `/regionmusic playmusic` | Phát nhạc thủ công cho region hiện tại | `regionmusic.playmusic` hoặc `regionmusic.admin` |
+| `/regionmusic stopmusic` | Dừng nhạc đang phát | `regionmusic.stopmusic` hoặc `regionmusic.admin` |
+| `/regionmusic togglemusic` | Bật/tắt nhạc | `regionmusic.togglemusic` hoặc `regionmusic.admin` |
+| `/regionmusic nextsong` | Chuyển sang bài nhạc tiếp theo | `regionmusic.nextsong` hoặc `regionmusic.admin` |
+| `/regionmusic about` | Hiển thị thông tin plugin | `regionmusic.about` hoặc `regionmusic.admin` |
+| `/rm` | Alias cho `/regionmusic` | Giống như `/regionmusic` |
 | `/togglemusic` | Bật/tắt nhạc (cho tất cả người chơi) | Không cần |
 
 ## Quyền
 
 | Quyền | Mô tả | Mặc định |
 |-------|-------|----------|
-| `regionmusic.admin` | Truy cập tất cả lệnh `/regionmusic` | OP |
+| `regionmusic.admin` | Truy cập tất cả lệnh `/regionmusic` (permission cha) | OP |
+| `regionmusic.reload` | Truy cập lệnh `/regionmusic reload` | OP |
+| `regionmusic.playmusic` | Truy cập lệnh `/regionmusic playmusic` | OP |
+| `regionmusic.stopmusic` | Truy cập lệnh `/regionmusic stopmusic` | OP |
+| `regionmusic.togglemusic` | Truy cập lệnh `/regionmusic togglemusic` | OP |
+| `regionmusic.nextsong` | Truy cập lệnh `/regionmusic nextsong` | OP |
+| `regionmusic.about` | Truy cập lệnh `/regionmusic about` | OP |
 
-**Lưu ý**: Lệnh `/togglemusic` có sẵn cho tất cả người chơi mà không cần quyền.
+**Lưu ý**: 
+- Lệnh `/togglemusic` có sẵn cho tất cả người chơi mà không cần quyền.
+- `regionmusic.admin` là permission cha bao gồm tất cả các permission con. Bạn có thể cấp từng permission riêng để kiểm soát chi tiết hơn.
 
 ## Ví dụ sử dụng
 

@@ -3,17 +3,25 @@ musics:
     sound: MUSIC_DISC_CAT
     interval: 185 # Nhạc dài bao nhiêu giây? Đặt thời lượng ở đây, đây là khoảng thời gian lặp lại, có thể là nhạc tùy chỉnh hoặc nhạc vanilla của bạn
     name: "Spawn Theme" # Tên hiển thị của bài nhạc (tùy chọn, mặc định sẽ dùng tên key)
+    volume: 1.0 # Âm lượng (0.0 - 1.0, mặc định: 1.0)
+    pitch: 1.0 # Cao độ (0.5 - 2.0, mặc định: 1.0)
   custommusic:
     sound: records.cat # hỗ trợ phiên bản chuỗi cho nhạc tùy chỉnh như itemsadder, v.v.
     interval: 185
     name: "Custom Music" # Tên hiển thị của bài nhạc (tùy chọn, mặc định sẽ dùng tên key)
+    volume: 1.0 # Âm lượng (0.0 - 1.0, mặc định: 1.0)
+    pitch: 1.0 # Cao độ (0.5 - 2.0, mặc định: 1.0)
   boss:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
     name: "Boss Battle" # Tên hiển thị của bài nhạc (tùy chọn, mặc định sẽ dùng tên key)
+    volume: 1.0 # Âm lượng (0.0 - 1.0, mặc định: 1.0)
+    pitch: 1.0 # Cao độ (0.5 - 2.0, mặc định: 1.0)
   boss2:
     sound: MUSIC_DISC_OTHERSIDE
     interval: 180
     name: "Boss Battle 2" # Tên hiển thị của bài nhạc (tùy chọn, mặc định sẽ dùng tên key)
+    volume: 1.0 # Âm lượng (0.0 - 1.0, mặc định: 1.0)
+    pitch: 1.0 # Cao độ (0.5 - 2.0, mặc định: 1.0)
 
 

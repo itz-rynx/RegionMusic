@@ -27,6 +27,10 @@ public class RegionConfigManager {
     private final Map<String, Integer> musicIntervalMap = new HashMap<>();
     // Map: musicName -> display name
     private final Map<String, String> musicDisplayNameMap = new HashMap<>();
+    // Map: musicName -> volume
+    private final Map<String, Float> musicVolumeMap = new HashMap<>();
+    // Map: musicName -> pitch
+    private final Map<String, Float> musicPitchMap = new HashMap<>();
     
     public RegionConfigManager(RegionMusic plugin) {
         this.plugin = plugin;
@@ -86,17 +90,25 @@ public class RegionConfigManager {
         musicSoundMap.clear();
         musicIntervalMap.clear();
         musicDisplayNameMap.clear();
+        musicVolumeMap.clear();
+        musicPitchMap.clear();
         if (musicsConfig.contains("musics")) {
             Set<String> musics = musicsConfig.getConfigurationSection("musics").getKeys(false);
             for (String key : musics) {
                 String sound = musicsConfig.getString("musics." + key + ".sound");
                 int interval = musicsConfig.getInt("musics." + key + ".interval", 185);
                 String displayName = musicsConfig.getString("musics." + key + ".name");
+                float volume = (float) musicsConfig.getDouble("musics." + key + ".volume", 1.0);
+                float pitch = (float) musicsConfig.getDouble("musics." + key + ".pitch", 1.0);
                 if (sound != null) {
                     musicSoundMap.put(key, sound);
                     musicIntervalMap.put(key, interval);
                     // Nếu không có name tùy chỉnh, dùng tên key làm display name
                     musicDisplayNameMap.put(key, displayName != null ? displayName : key);
+                    // Giới hạn volume trong khoảng 0.0 - 1.0
+                    musicVolumeMap.put(key, Math.max(0.0f, Math.min(1.0f, volume)));
+                    // Giới hạn pitch trong khoảng 0.5 - 2.0
+                    musicPitchMap.put(key, Math.max(0.5f, Math.min(2.0f, pitch)));
                 }
             }
         }
@@ -135,6 +147,14 @@ public class RegionConfigManager {
     
     public String getDisplayNameForMusic(String musicName) {
         return musicDisplayNameMap.getOrDefault(musicName, musicName);
+    }
+    
+    public float getVolumeForMusic(String musicName) {
+        return musicVolumeMap.getOrDefault(musicName, 1.0f);
+    }
+    
+    public float getPitchForMusic(String musicName) {
+        return musicPitchMap.getOrDefault(musicName, 1.0f);
     }
 }
 

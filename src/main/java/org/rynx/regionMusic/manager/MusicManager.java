@@ -148,8 +148,12 @@ public class MusicManager {
             }
         }
         
+        // Lấy volume và pitch từ config
+        float volume = configManager.getVolumeForMusic(musicName);
+        float pitch = configManager.getPitchForMusic(musicName);
+        
         // Phát bài nhạc hiện tại (CHỈ MỘT BÀI tại một thời điểm)
-        playSound(player, soundName);
+        playSound(player, soundName, volume, pitch);
         
         // Tính toán index bài tiếp theo (loop nếu hết)
         final int nextSongIndex = (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
@@ -204,7 +208,7 @@ public class MusicManager {
         playerCurrentRegion.remove(uuid);
     }
     
-    private void playSound(Player player, String soundName) {
+    private void playSound(Player player, String soundName, float volume, float pitch) {
         UUID playerId = player.getUniqueId();
         org.bukkit.Location location = player.getLocation();
         
@@ -219,13 +223,13 @@ public class MusicManager {
         String actualSoundName = soundName;
         try {
             // Try as-is first (supports both vanilla and custom sounds)
-            player.playSound(location, soundName, 1.0f, 1.0f);
+            player.playSound(location, soundName, volume, pitch);
             actualSoundName = soundName;
         } catch (Exception e) {
             // If direct string fails, try with minecraft: namespace prefix
             try {
                 String formattedSound = soundName.contains(":") ? soundName : "minecraft:" + soundName.toLowerCase().replace("_", ".");
-                player.playSound(location, formattedSound, 1.0f, 1.0f);
+                player.playSound(location, formattedSound, volume, pitch);
                 actualSoundName = formattedSound;
             } catch (Exception ex) {
                 plugin.getLogger().warning("Không thể phát âm thanh: " + soundName + " - " + ex.getMessage());

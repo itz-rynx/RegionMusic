@@ -1,5 +1,5 @@
 name: RegionMusic
-version: '1.5'
+version: '1.7'
 main: org.rynx.regionMusic.RegionMusic
 api-version: '1.21'
 author: rynx
@@ -15,5 +15,30 @@ commands:
     aliases: []
 permissions:
   regionmusic.admin:
-    description: Cho phép truy cập các lệnh RegionMusic
+    description: Cho phép truy cập tất cả các lệnh RegionMusic (parent permission)
+    default: op
+    children:
+      regionmusic.reload: true
+      regionmusic.playmusic: true
+      regionmusic.stopmusic: true
+      regionmusic.togglemusic: true
+      regionmusic.nextsong: true
+      regionmusic.about: true
+  regionmusic.reload:
+    description: Cho phép sử dụng lệnh /regionmusic reload
+    default: op
+  regionmusic.playmusic:
+    description: Cho phép sử dụng lệnh /regionmusic playmusic
+    default: op
+  regionmusic.stopmusic:
+    description: Cho phép sử dụng lệnh /regionmusic stopmusic
+    default: op
+  regionmusic.togglemusic:
+    description: Cho phép sử dụng lệnh /regionmusic togglemusic
+    default: op
+  regionmusic.nextsong:
+    description: Cho phép sử dụng lệnh /regionmusic nextsong
+    default: op
+  regionmusic.about:
+    description: Cho phép sử dụng lệnh /regionmusic about
     default: op
