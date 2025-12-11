@@ -116,6 +116,21 @@ public class RegionMusicCommand implements CommandExecutor {
                 }
                 break;
                 
+            case "nextsong":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgManager.getMessage("player-only"));
+                    return true;
+                }
+                Player playerNext = (Player) sender;
+                String nextRegion = WorldGuardUtils.getPlayerRegion(playerNext);
+                if (nextRegion != null && configManager.hasRegion(nextRegion)) {
+                    musicManager.skipToNextSong(playerNext);
+                    sender.sendMessage(msgManager.getMessage("nextsong-success"));
+                } else {
+                    sender.sendMessage(msgManager.getMessage("nextsong-no-region"));
+                }
+                break;
+                
             default:
                 sender.sendMessage(msgManager.getMessage("usage"));
                 break;

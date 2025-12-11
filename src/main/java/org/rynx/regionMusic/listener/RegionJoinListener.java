@@ -26,15 +26,19 @@ public class RegionJoinListener implements Listener {
         Player player = event.getPlayer();
         
         // Check if player is in a region when they join (chỉ kích hoạt một lần)
+        // Delay lâu hơn để tránh conflict với RegionListener
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) {
                 return;
             }
+            
+            // Kiểm tra lại xem player đã được RegionListener xử lý chưa
             String currentRegion = WorldGuardUtils.getPlayerRegion(player);
             if (currentRegion != null && configManager.hasRegion(currentRegion)) {
+                // Chỉ phát nếu player vẫn ở trong region sau khi join
                 musicManager.playMusicForPlayer(player, currentRegion);
             }
-        }, 20L); // Wait 1 second for WorldGuard to initialize
+        }, 40L); // Wait 2 seconds for WorldGuard to initialize và RegionListener xử lý
     }
 }
 

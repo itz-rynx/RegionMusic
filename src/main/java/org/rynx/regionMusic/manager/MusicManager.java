@@ -38,15 +38,19 @@ public class MusicManager {
         
         UUID playerId = player.getUniqueId();
         
+        // Kiểm tra xem đã có task đang chạy cho region này chưa
+        String currentRegion = playerCurrentRegion.get(playerId);
+        if (currentRegion != null && currentRegion.equalsIgnoreCase(regionName)) {
+            // Đang phát cùng region, không cần phát lại
+            return;
+        }
+        
         // DỪNG HOÀN TOÀN task cũ trước khi phát bài mới (tránh phát cùng lúc)
         stopMusicForPlayer(player);
         
-        // Nếu đang phát region khác, reset về bài đầu
-        String currentRegion = playerCurrentRegion.get(playerId);
-        if (currentRegion == null || !currentRegion.equalsIgnoreCase(regionName)) {
-            playerCurrentSongIndex.put(playerId, 0);
-            playerCurrentRegion.put(playerId, regionName);
-        }
+        // Reset về bài đầu cho region mới
+        playerCurrentSongIndex.put(playerId, 0);
+        playerCurrentRegion.put(playerId, regionName);
         
         // Đợi một tick để đảm bảo task cũ đã được hủy hoàn toàn
         new BukkitRunnable() {
@@ -63,10 +67,15 @@ public class MusicManager {
                     return;
                 }
                 
+                // Kiểm tra lại xem đã có task khác đang chạy chưa
+                if (playerMusicTasks.containsKey(playerId)) {
+                    return; // Đã có task khác đang chạy
+                }
+                
                 // Bắt đầu phát playlist (chỉ phát một bài tại một thời điểm)
                 playNextSong(player, regionName, musicList, 0);
             }
-        }.runTaskLater(plugin, 1L);
+        }.runTaskLater(plugin, 2L); // Tăng delay lên 2 ticks để đảm bảo
     }
     
     private void playNextSong(Player player, String regionName, List<String> musicList, int songIndex) {
@@ -76,6 +85,12 @@ public class MusicManager {
         BukkitTask existingTask = playerMusicTasks.get(playerId);
         if (existingTask != null && !existingTask.isCancelled()) {
             existingTask.cancel();
+            playerMusicTasks.remove(playerId);
+        }
+        
+        // Kiểm tra lại xem player còn online
+        if (!player.isOnline()) {
+            return;
         }
         
         // Xử lý loop: nếu vượt quá size thì quay về 0
@@ -107,7 +122,8 @@ public class MusicManager {
             @Override
             public void run() {
                 // Kiểm tra lại xem task này vẫn còn hợp lệ
-                if (playerMusicTasks.get(playerId) != this) {
+                BukkitTask currentTask = playerMusicTasks.get(playerId);
+                if (currentTask != this) {
                     return; // Task đã bị thay thế
                 }
                 
@@ -127,7 +143,7 @@ public class MusicManager {
                     return;
                 }
                 
-                // Phát bài tiếp theo (loop lại nếu hết) - chỉ khi không có task mới
+                // Phát bài tiếp theo (loop lại nếu hết) - chỉ khi task này vẫn còn hợp lệ
                 if (playerMusicTasks.get(playerId) == this) {
                     playNextSong(player, regionName, musicList, nextSongIndex);
                 }
@@ -165,6 +181,32 @@ public class MusicManager {
                 plugin.getLogger().warning("Không thể phát âm thanh: " + soundName + " - " + ex.getMessage());
             }
         }
+    }
+    
+    public void skipToNextSong(Player player) {
+        UUID playerId = player.getUniqueId();
+        String currentRegion = playerCurrentRegion.get(playerId);
+        
+        if (currentRegion == null) {
+            return; // Không có region đang phát
+        }
+        
+        List<String> musicList = configManager.getMusicListForRegion(currentRegion);
+        if (musicList == null || musicList.isEmpty()) {
+            return;
+        }
+        
+        Integer currentIndex = playerCurrentSongIndex.get(playerId);
+        if (currentIndex == null) {
+            currentIndex = 0;
+        }
+        
+        // Dừng nhạc hiện tại
+        stopMusicForPlayer(player);
+        
+        // Phát bài tiếp theo
+        int nextIndex = (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
+        playNextSong(player, currentRegion, musicList, nextIndex);
     }
     
     public void removePlayer(Player player) {

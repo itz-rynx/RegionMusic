@@ -19,4 +19,8 @@ messages:
   # Toggle music
   toggle-off: "&cĐã tắt nhạc!"
   toggle-on: "&aĐã bật nhạc!"
+  
+  # Next song
+  nextsong-success: "&aĐã chuyển sang bài nhạc tiếp theo!"
+  nextsong-no-region: "&cBạn không ở trong khu vực có nhạc!"
 
