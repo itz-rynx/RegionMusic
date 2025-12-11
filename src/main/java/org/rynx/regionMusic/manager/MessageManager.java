@@ -22,10 +22,10 @@ public class MessageManager {
             plugin.getDataFolder().mkdirs();
         }
         
-        messagesFile = new File(plugin.getDataFolder(), "msg.yml");
+        messagesFile = new File(plugin.getDataFolder(), "lang.yml");
         
         if (!messagesFile.exists()) {
-            plugin.saveResource("msg.yml", false);
+            plugin.saveResource("lang.yml", false);
         }
         
         messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);

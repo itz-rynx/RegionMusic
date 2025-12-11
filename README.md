@@ -41,7 +41,7 @@ A lightweight Minecraft plugin that automatically plays music/sounds when player
 - 🔊 **Custom Sounds**: Supports both vanilla Minecraft sounds and custom sounds (ItemsAdder, etc.)
 - ⚡ **Performance Optimized**: Lightweight and optimized for performance
 - 🚫 **No Overlap**: Prevents music overlap from different regions
-- 📝 **Customizable Messages**: All messages can be customized via `msg.yml`
+- 📝 **Customizable Messages**: All messages can be customized via `lang.yml`
 - 🌍 **WorldGuard Integration**: Works with all WorldGuard regions
 
 ## Requirements
@@ -98,7 +98,7 @@ musics:
 - Vanilla: `MUSIC_DISC_CAT`, `minecraft:music_disc.cat`
 - Custom: `records.cat`, `itemsadder:records.cat`, `namespace:sound_name`
 
-### msg.yml
+### lang.yml
 
 Customize all plugin messages:
 
@@ -196,7 +196,7 @@ musics:
 - 🔊 **Âm thanh tùy chỉnh**: Hỗ trợ cả âm thanh vanilla Minecraft và âm thanh tùy chỉnh (ItemsAdder, v.v.)
 - ⚡ **Tối ưu hiệu năng**: Nhẹ và được tối ưu hóa cho hiệu năng
 - 🚫 **Không chồng chéo**: Ngăn chặn nhạc chồng chéo từ các vùng khác nhau
-- 📝 **Tùy chỉnh thông báo**: Tất cả thông báo có thể tùy chỉnh qua `msg.yml`
+- 📝 **Tùy chỉnh thông báo**: Tất cả thông báo có thể tùy chỉnh qua `lang.yml`
 - 🌍 **Tích hợp WorldGuard**: Hoạt động với tất cả các khu vực WorldGuard
 
 ## Yêu cầu
@@ -253,7 +253,7 @@ musics:
 - Vanilla: `MUSIC_DISC_CAT`, `minecraft:music_disc.cat`
 - Tùy chỉnh: `records.cat`, `itemsadder:records.cat`, `namespace:sound_name`
 
-### msg.yml
+### lang.yml
 
 Tùy chỉnh tất cả thông báo của plugin:
 
@@ -358,9 +358,9 @@ musics:
 
 ## 🐛 Issues / Vấn đề
 
-If you encounter any issues, please report them on the [GitHub Issues](https://github.com/rynx/RegionMusic/issues) page.
+If you encounter any issues, please report them on the [GitHub Issues](https://github.com/itz-rynx/RegionMusic/issues) page.
 
-Nếu bạn gặp bất kỳ vấn đề nào, vui lòng báo cáo trên trang [GitHub Issues](https://github.com/rynx/RegionMusic/issues).
+Nếu bạn gặp bất kỳ vấn đề nào, vui lòng báo cáo trên trang [GitHub Issues](https://github.com/itz-rynx/RegionMusic/issues).
 
 ---
 

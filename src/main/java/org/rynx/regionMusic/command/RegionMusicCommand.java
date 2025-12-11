@@ -42,17 +42,17 @@ public class RegionMusicCommand implements CommandExecutor {
                 @SuppressWarnings("deprecation")
                 org.bukkit.plugin.PluginDescriptionFile desc = plugin.getDescription();
                 String author = desc.getAuthors().isEmpty() ? "rynx" : String.join(", ", desc.getAuthors());
-                sender.sendMessage(msgManager.getMessage("about-header"));
-                sender.sendMessage(msgManager.getMessage("about-version", "{version}", desc.getVersion()));
-                sender.sendMessage(msgManager.getMessage("about-author", "{author}", author));
-                sender.sendMessage(msgManager.getMessage("about-api", "{api}", desc.getAPIVersion()));
-                sender.sendMessage(msgManager.getMessage("about-description"));
-                sender.sendMessage(msgManager.getMessage("about-features-header"));
-                sender.sendMessage(msgManager.getMessage("about-feature-1"));
-                sender.sendMessage(msgManager.getMessage("about-feature-2"));
-                sender.sendMessage(msgManager.getMessage("about-feature-3"));
-                sender.sendMessage(msgManager.getMessage("about-feature-4"));
-                sender.sendMessage(msgManager.getMessage("about-footer"));
+                sender.sendMessage("§6========== §eRegionMusic §6==========");
+                sender.sendMessage("§7Version: §f" + desc.getVersion());
+                sender.sendMessage("§7Author: §f" + author);
+                sender.sendMessage("§7API Version: §f" + desc.getAPIVersion());
+                sender.sendMessage("§7Description: §fPhát nhạc tự động khi vào/ra khu vực WorldGuard");
+                sender.sendMessage("§7Features:");
+                sender.sendMessage("§7  - Hỗ trợ nhiều nhạc trong 1 region");
+                sender.sendMessage("§7  - Phát tuần tự và tự động loop");
+                sender.sendMessage("§7  - Hỗ trợ vanilla và custom sounds");
+                sender.sendMessage("§7  - Tối ưu hiệu năng");
+                sender.sendMessage("§6================================");
                 break;
                 
             case "reload":
