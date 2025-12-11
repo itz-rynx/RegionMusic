@@ -1,5 +1,5 @@
 name: RegionMusic
-version: '1.2'
+version: '1.3'
 main: org.rynx.regionMusic.RegionMusic
 api-version: '1.21'
 author: rynx
@@ -8,6 +8,7 @@ commands:
   regionmusic:
     description: Lệnh quản trị RegionMusic
     usage: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about>
+    aliases: [rm]
   togglemusic:
     description: Bật/tắt nhạc
     usage: /togglemusic
