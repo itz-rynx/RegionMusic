@@ -23,4 +23,7 @@ messages:
   # Next song
   nextsong-success: "&aĐã chuyển sang bài nhạc tiếp theo!"
   nextsong-no-region: "&cBạn không ở trong khu vực có nhạc!"
+  
+  # Now playing
+  now-playing: "&aĐang phát bài: &f{song}"
 

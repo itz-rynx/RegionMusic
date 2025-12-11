@@ -6,6 +6,24 @@ Tất cả các thay đổi đáng chú ý của RegionMusic sẽ được ghi l
 
 ---
 
+## [1.5] - 2024
+
+### Added / Thêm mới
+- ✨ **Custom Song Names**: Thêm khả năng tùy chỉnh tên bài hát trong `musics.yml` với field `name`
+- ✨ **Now Playing Notification**: Hiển thị thông báo "Đang phát bài: [tên bài]" khi bắt đầu phát một bài nhạc
+- ✨ **Skip Notification**: Hiển thị thông báo tên bài hát khi dùng lệnh `/regionmusic nextsong` (skip)
+
+### Changed / Thay đổi
+- 📝 **Config**: Thêm field `name` (tùy chọn) vào `musics.yml` để tùy chỉnh tên hiển thị của bài nhạc
+- 📝 **Messages**: Thêm message `now-playing` vào `lang.yml` để tùy chỉnh thông báo đang phát
+
+### Technical / Kỹ thuật
+- 🔨 **Code**: Thêm method `getDisplayNameForMusic()` trong `RegionConfigManager` để lấy tên hiển thị của bài nhạc
+- 🔨 **Code**: Thêm Map `musicDisplayNameMap` để lưu trữ tên hiển thị tùy chỉnh
+- 🔨 **Code**: Cập nhật `playNextSong()` để hiển thị thông báo khi phát bài nhạc mới
+
+---
+
 ## [1.4] - 2024
 
 ### Fixed / Sửa lỗi

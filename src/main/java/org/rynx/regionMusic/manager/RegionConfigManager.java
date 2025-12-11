@@ -25,6 +25,8 @@ public class RegionConfigManager {
     private final Map<String, String> musicSoundMap = new HashMap<>();
     // Map: musicName -> interval
     private final Map<String, Integer> musicIntervalMap = new HashMap<>();
+    // Map: musicName -> display name
+    private final Map<String, String> musicDisplayNameMap = new HashMap<>();
     
     public RegionConfigManager(RegionMusic plugin) {
         this.plugin = plugin;
@@ -83,14 +85,18 @@ public class RegionConfigManager {
     private void loadMusics() {
         musicSoundMap.clear();
         musicIntervalMap.clear();
+        musicDisplayNameMap.clear();
         if (musicsConfig.contains("musics")) {
             Set<String> musics = musicsConfig.getConfigurationSection("musics").getKeys(false);
             for (String key : musics) {
                 String sound = musicsConfig.getString("musics." + key + ".sound");
                 int interval = musicsConfig.getInt("musics." + key + ".interval", 185);
+                String displayName = musicsConfig.getString("musics." + key + ".name");
                 if (sound != null) {
                     musicSoundMap.put(key, sound);
                     musicIntervalMap.put(key, interval);
+                    // Nếu không có name tùy chỉnh, dùng tên key làm display name
+                    musicDisplayNameMap.put(key, displayName != null ? displayName : key);
                 }
             }
         }
@@ -125,6 +131,10 @@ public class RegionConfigManager {
     
     public boolean hasMusic(String musicName) {
         return musicSoundMap.containsKey(musicName);
+    }
+    
+    public String getDisplayNameForMusic(String musicName) {
+        return musicDisplayNameMap.getOrDefault(musicName, musicName);
     }
 }
 

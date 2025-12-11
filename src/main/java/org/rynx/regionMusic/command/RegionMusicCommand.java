@@ -125,7 +125,7 @@ public class RegionMusicCommand implements CommandExecutor {
                 String nextRegion = WorldGuardUtils.getPlayerRegion(playerNext);
                 if (nextRegion != null && configManager.hasRegion(nextRegion)) {
                     musicManager.skipToNextSong(playerNext);
-                    sender.sendMessage(msgManager.getMessage("nextsong-success"));
+                    // Thông báo skip đã được hiển thị trong skipToNextSong
                 } else {
                     sender.sendMessage(msgManager.getMessage("nextsong-no-region"));
                 }

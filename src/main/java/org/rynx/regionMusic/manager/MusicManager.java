@@ -15,6 +15,7 @@ public class MusicManager {
     private final RegionMusic plugin;
     private final RegionConfigManager configManager;
     private final MusicToggleManager toggleManager;
+    private org.rynx.regionMusic.manager.MessageManager messageManager;
     private final Map<UUID, BukkitTask> playerMusicTasks = new HashMap<>();
     // Track current song index và region cho mỗi player
     private final Map<UUID, Integer> playerCurrentSongIndex = new HashMap<>();
@@ -26,6 +27,7 @@ public class MusicManager {
         this.plugin = plugin;
         this.configManager = configManager;
         this.toggleManager = toggleManager;
+        this.messageManager = plugin.getMessageManager();
     }
     
     public void playMusicForPlayer(Player player, String regionName) {
@@ -134,6 +136,17 @@ public class MusicManager {
         // Cập nhật index hiện tại
         playerCurrentSongIndex.put(playerId, currentIndex);
         playerCurrentRegion.put(playerId, regionName);
+        
+        // Lấy tên hiển thị của bài nhạc
+        String displayName = configManager.getDisplayNameForMusic(musicName);
+        
+        // Hiển thị thông báo đang phát bài
+        if (messageManager != null) {
+            String message = messageManager.getMessage("now-playing", "{song}", displayName);
+            if (message != null && !message.isEmpty()) {
+                player.sendMessage(message);
+            }
+        }
         
         // Phát bài nhạc hiện tại (CHỈ MỘT BÀI tại một thời điểm)
         playSound(player, soundName);
