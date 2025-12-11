@@ -45,6 +45,7 @@ A lightweight Minecraft plugin that automatically plays music/sounds when player
 - 🌍 **WorldGuard Integration**: Works with all WorldGuard regions
 - 🎼 **Custom Song Names**: Customize display names for songs in `musics.yml`
 - 📢 **Now Playing Notifications**: Shows "Now playing: [song name]" when a song starts
+- 🔊 **Volume & Pitch Control**: Adjust volume and pitch for each song individually
 
 ## Requirements
 
@@ -89,14 +90,20 @@ musics:
     sound: MUSIC_DISC_CAT        # Vanilla sound name
     interval: 185                 # Duration in seconds
     name: "Spawn Theme"           # Display name (optional, defaults to key name)
+    volume: 1.0                   # Volume (0.0 - 1.0, default: 1.0)
+    pitch: 1.0                    # Pitch (0.5 - 2.0, default: 1.0)
   custommusic:
     sound: records.cat            # Custom sound (ItemsAdder, etc.)
     interval: 185
     name: "Custom Music"          # Display name (optional)
+    volume: 1.0                   # Volume (optional)
+    pitch: 1.0                    # Pitch (optional)
   boss:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
     name: "Boss Battle"          # Display name (optional)
+    volume: 1.0                  # Volume (optional)
+    pitch: 1.0                   # Pitch (optional)
 ```
 
 **Sound Format:**
@@ -106,6 +113,10 @@ musics:
 **Display Name:**
 - Field `name` is optional - if not provided, the key name will be used as display name
 - Display name is shown in "Now playing" notifications
+
+**Volume & Pitch:**
+- Field `volume` is optional (default: 1.0) - controls sound volume (0.0 = silent, 1.0 = full volume)
+- Field `pitch` is optional (default: 1.0) - controls sound pitch (0.5 = half speed, 1.0 = normal, 2.0 = double speed)
 
 ### lang.yml
 
@@ -167,6 +178,8 @@ musics:
     sound: MUSIC_DISC_CAT
     interval: 185
     name: "Spawn Theme"  # Optional
+    volume: 1.0          # Optional
+    pitch: 1.0            # Optional
 ```
 
 ### Example 2: Multiple Songs (Playlist)
@@ -187,14 +200,20 @@ musics:
     sound: MUSIC_DISC_CHIRP
     interval: 185
     name: "Dungeon Theme 1"  # Optional
+    volume: 1.0               # Optional
+    pitch: 1.0                # Optional
   dungeon_theme_2:
     sound: MUSIC_DISC_FAR
     interval: 197
     name: "Dungeon Theme 2"  # Optional
+    volume: 1.0               # Optional
+    pitch: 1.0                # Optional
   boss_music:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
     name: "Boss Battle"  # Optional
+    volume: 1.0          # Optional
+    pitch: 1.0           # Optional
 ```
 
 ### Example 3: Custom Sounds (ItemsAdder)
@@ -206,6 +225,8 @@ musics:
     sound: itemsadder:records.custom_music
     interval: 200
     name: "Custom Music"  # Optional
+    volume: 0.8           # Optional
+    pitch: 1.0            # Optional
 ```
 
 ---
@@ -409,6 +430,7 @@ musics:
 - Use `/regionmusic reload` after editing config files
 - "Now playing" notifications are shown when a song starts or when skipping
 - Custom song names can be set in `musics.yml` with the `name` field
+- Volume and pitch can be adjusted per song for fine-tuned audio experience
 
 - Nhạc **mặc định được bật** cho tất cả người chơi
 - Người chơi có thể bật/tắt nhạc bằng `/togglemusic`
