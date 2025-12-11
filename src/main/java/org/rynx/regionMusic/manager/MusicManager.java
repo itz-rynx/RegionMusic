@@ -19,6 +19,8 @@ public class MusicManager {
     // Track current song index và region cho mỗi player
     private final Map<UUID, Integer> playerCurrentSongIndex = new HashMap<>();
     private final Map<UUID, String> playerCurrentRegion = new HashMap<>();
+    // Track sound đang phát để có thể dừng khi skip
+    private final Map<UUID, String> playerCurrentSound = new HashMap<>();
     
     public MusicManager(RegionMusic plugin, RegionConfigManager configManager, MusicToggleManager toggleManager) {
         this.plugin = plugin;
@@ -41,12 +43,16 @@ public class MusicManager {
         // Kiểm tra xem đã có task đang chạy cho region này chưa
         String currentRegion = playerCurrentRegion.get(playerId);
         if (currentRegion != null && currentRegion.equalsIgnoreCase(regionName)) {
-            // Đang phát cùng region, không cần phát lại
+            // Đang phát cùng region, không cần phát lại (tránh spam)
             return;
         }
         
         // DỪNG HOÀN TOÀN task cũ trước khi phát bài mới (tránh phát cùng lúc)
-        stopMusicForPlayer(player);
+        BukkitTask oldTask = playerMusicTasks.get(playerId);
+        if (oldTask != null && !oldTask.isCancelled()) {
+            oldTask.cancel();
+            playerMusicTasks.remove(playerId);
+        }
         
         // Reset về bài đầu cho region mới
         playerCurrentSongIndex.put(playerId, 0);
@@ -58,16 +64,26 @@ public class MusicManager {
             public void run() {
                 // Kiểm tra lại xem player còn online và toggle vẫn bật
                 if (!player.isOnline() || toggleManager.isMusicToggledOff(player)) {
+                    // Cleanup nếu player offline hoặc toggle tắt
+                    playerMusicTasks.remove(playerId);
+                    playerCurrentSongIndex.remove(playerId);
+                    playerCurrentRegion.remove(playerId);
+                    playerCurrentSound.remove(playerId);
                     return;
                 }
                 
                 // Kiểm tra lại xem player vẫn ở trong region
                 String checkRegion = org.rynx.regionMusic.util.WorldGuardUtils.getPlayerRegion(player);
                 if (checkRegion == null || !checkRegion.equalsIgnoreCase(regionName)) {
+                    // Player đã rời khỏi region, cleanup
+                    playerMusicTasks.remove(playerId);
+                    playerCurrentSongIndex.remove(playerId);
+                    playerCurrentRegion.remove(playerId);
+                    playerCurrentSound.remove(playerId);
                     return;
                 }
                 
-                // Kiểm tra lại xem đã có task khác đang chạy chưa
+                // Kiểm tra lại xem đã có task khác đang chạy chưa (double check)
                 if (playerMusicTasks.containsKey(playerId)) {
                     return; // Đã có task khác đang chạy
                 }
@@ -75,22 +91,30 @@ public class MusicManager {
                 // Bắt đầu phát playlist (chỉ phát một bài tại một thời điểm)
                 playNextSong(player, regionName, musicList, 0);
             }
-        }.runTaskLater(plugin, 2L); // Tăng delay lên 2 ticks để đảm bảo
+        }.runTaskLater(plugin, 2L); // Delay 2 ticks để đảm bảo task cũ đã được hủy
     }
     
     private void playNextSong(Player player, String regionName, List<String> musicList, int songIndex) {
         UUID playerId = player.getUniqueId();
+        
+        // Kiểm tra lại xem player còn online
+        if (!player.isOnline()) {
+            return;
+        }
+        
+        // Kiểm tra lại xem player vẫn ở trong region
+        String checkRegion = org.rynx.regionMusic.util.WorldGuardUtils.getPlayerRegion(player);
+        if (checkRegion == null || !checkRegion.equalsIgnoreCase(regionName)) {
+            // Player đã rời khỏi region, dừng nhạc
+            stopMusicForPlayer(player);
+            return;
+        }
         
         // Đảm bảo chỉ có một task đang chạy - hủy task cũ nếu có
         BukkitTask existingTask = playerMusicTasks.get(playerId);
         if (existingTask != null && !existingTask.isCancelled()) {
             existingTask.cancel();
             playerMusicTasks.remove(playerId);
-        }
-        
-        // Kiểm tra lại xem player còn online
-        if (!player.isOnline()) {
-            return;
         }
         
         // Xử lý loop: nếu vượt quá size thì quay về 0
@@ -121,36 +145,32 @@ public class MusicManager {
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-                // Kiểm tra lại xem task này vẫn còn hợp lệ
-                BukkitTask currentTask = playerMusicTasks.get(playerId);
-                if (currentTask != this) {
-                    return; // Task đã bị thay thế
-                }
+                // Xóa task khỏi map trước để tránh conflict
+                playerMusicTasks.remove(playerId);
                 
+                // Kiểm tra lại xem player còn online và toggle vẫn bật
                 if (!player.isOnline() || toggleManager.isMusicToggledOff(player)) {
-                    playerMusicTasks.remove(playerId);
                     playerCurrentSongIndex.remove(playerId);
                     playerCurrentRegion.remove(playerId);
+                    playerCurrentSound.remove(playerId);
                     return;
                 }
                 
                 // Check if player is still in the region
                 String currentRegion = org.rynx.regionMusic.util.WorldGuardUtils.getPlayerRegion(player);
                 if (currentRegion == null || !currentRegion.equalsIgnoreCase(regionName)) {
-                    playerMusicTasks.remove(playerId);
                     playerCurrentSongIndex.remove(playerId);
                     playerCurrentRegion.remove(playerId);
+                    playerCurrentSound.remove(playerId);
                     return;
                 }
                 
-                // Phát bài tiếp theo (loop lại nếu hết) - chỉ khi task này vẫn còn hợp lệ
-                if (playerMusicTasks.get(playerId) == this) {
-                    playNextSong(player, regionName, musicList, nextSongIndex);
-                }
+                // Phát bài tiếp theo tự động (loop lại nếu hết)
+                playNextSong(player, regionName, musicList, nextSongIndex);
             }
         }.runTaskLater(plugin, interval * 20L);
         
-        // Lưu task mới (thay thế task cũ nếu có)
+        // Lưu task mới
         playerMusicTasks.put(playerId, task);
     }
     
@@ -160,25 +180,73 @@ public class MusicManager {
         if (task != null) {
             task.cancel();
         }
+        
+        // Dừng sound đang phát
+        String currentSound = playerCurrentSound.remove(uuid);
+        if (currentSound != null) {
+            stopSound(player, currentSound);
+        }
+        
         playerCurrentSongIndex.remove(uuid);
         playerCurrentRegion.remove(uuid);
     }
     
     private void playSound(Player player, String soundName) {
+        UUID playerId = player.getUniqueId();
         org.bukkit.Location location = player.getLocation();
+        
+        // Dừng sound cũ đang phát trước (nếu có)
+        String oldSound = playerCurrentSound.get(playerId);
+        if (oldSound != null) {
+            stopSound(player, oldSound);
+        }
         
         // Paper 1.21.5 supports playSound with String for both vanilla and custom sounds
         // Format: "minecraft:sound_name" for vanilla or "namespace:sound_name" for custom
+        String actualSoundName = soundName;
         try {
             // Try as-is first (supports both vanilla and custom sounds)
             player.playSound(location, soundName, 1.0f, 1.0f);
+            actualSoundName = soundName;
         } catch (Exception e) {
             // If direct string fails, try with minecraft: namespace prefix
             try {
                 String formattedSound = soundName.contains(":") ? soundName : "minecraft:" + soundName.toLowerCase().replace("_", ".");
                 player.playSound(location, formattedSound, 1.0f, 1.0f);
+                actualSoundName = formattedSound;
             } catch (Exception ex) {
                 plugin.getLogger().warning("Không thể phát âm thanh: " + soundName + " - " + ex.getMessage());
+                return;
+            }
+        }
+        
+        // Lưu lại sound name đang phát để có thể dừng sau này
+        playerCurrentSound.put(playerId, actualSoundName);
+    }
+    
+    private void stopSound(Player player, String soundName) {
+        try {
+            // Thử dừng với sound name gốc
+            player.stopSound(soundName);
+        } catch (Exception e) {
+            // Nếu không được, thử với format khác
+            try {
+                if (soundName.contains(":")) {
+                    // Nếu có namespace, thử dừng với tên không có namespace
+                    String nameWithoutNamespace = soundName.substring(soundName.indexOf(":") + 1);
+                    player.stopSound(nameWithoutNamespace);
+                } else {
+                    // Nếu không có namespace, thử thêm minecraft:
+                    String formattedSound = "minecraft:" + soundName.toLowerCase().replace("_", ".");
+                    player.stopSound(formattedSound);
+                }
+            } catch (Exception ex) {
+                // Nếu vẫn không được, dừng tất cả sounds (fallback)
+                try {
+                    player.stopAllSounds();
+                } catch (Exception ex2) {
+                    // Ignore nếu không thể dừng sound
+                }
             }
         }
     }
@@ -201,16 +269,75 @@ public class MusicManager {
             currentIndex = 0;
         }
         
-        // Dừng nhạc hiện tại
-        stopMusicForPlayer(player);
+        // Hủy task hiện tại để dừng bài đang phát
+        BukkitTask currentTask = playerMusicTasks.get(playerId);
+        if (currentTask != null && !currentTask.isCancelled()) {
+            currentTask.cancel();
+            playerMusicTasks.remove(playerId);
+        }
         
-        // Phát bài tiếp theo
+        // Dừng sound đang phát trước khi chuyển sang bài tiếp theo
+        String currentSound = playerCurrentSound.get(playerId);
+        if (currentSound != null) {
+            stopSound(player, currentSound);
+            playerCurrentSound.remove(playerId);
+        }
+        
+        // Tính toán index bài tiếp theo
         int nextIndex = (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
-        playNextSong(player, currentRegion, musicList, nextIndex);
+        
+        // Đợi một tick để đảm bảo task cũ và sound đã được dừng hoàn toàn
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Kiểm tra lại xem player còn online và vẫn ở trong region
+                if (!player.isOnline() || toggleManager.isMusicToggledOff(player)) {
+                    return;
+                }
+                
+                String checkRegion = org.rynx.regionMusic.util.WorldGuardUtils.getPlayerRegion(player);
+                if (checkRegion == null || !checkRegion.equalsIgnoreCase(currentRegion)) {
+                    return;
+                }
+                
+                // Phát bài tiếp theo
+                playNextSong(player, currentRegion, musicList, nextIndex);
+            }
+        }.runTaskLater(plugin, 1L);
     }
     
     public void removePlayer(Player player) {
+        UUID uuid = player.getUniqueId();
         stopMusicForPlayer(player);
+        // Đảm bảo cleanup hoàn toàn
+        playerCurrentSound.remove(uuid);
+    }
+    
+    /**
+     * Kiểm tra xem có đang phát nhạc cho player không
+     * @param player Player cần kiểm tra
+     * @return true nếu đang phát nhạc, false nếu không
+     */
+    public boolean isMusicPlaying(Player player) {
+        UUID playerId = player.getUniqueId();
+        BukkitTask task = playerMusicTasks.get(playerId);
+        return task != null && !task.isCancelled();
+    }
+    
+    /**
+     * Kiểm tra xem có đang phát nhạc cho region này không
+     * @param player Player cần kiểm tra
+     * @param regionName Tên region cần kiểm tra
+     * @return true nếu đang phát nhạc cho region này, false nếu không
+     */
+    public boolean isMusicPlayingForRegion(Player player, String regionName) {
+        UUID playerId = player.getUniqueId();
+        String currentRegion = playerCurrentRegion.get(playerId);
+        if (currentRegion == null || !currentRegion.equalsIgnoreCase(regionName)) {
+            return false;
+        }
+        BukkitTask task = playerMusicTasks.get(playerId);
+        return task != null && !task.isCancelled();
     }
 }
 

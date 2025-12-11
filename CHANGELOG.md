@@ -6,6 +6,24 @@ Tất cả các thay đổi đáng chú ý của RegionMusic sẽ được ghi l
 
 ---
 
+## [1.4] - 2024
+
+### Fixed / Sửa lỗi
+- 🐛 **Fixed**: Sửa lỗi nhạc không tự động chuyển bài - bài 1 phát xong sẽ tự động chuyển sang bài 2
+- 🐛 **Fixed**: Sửa lỗi lệnh `/regionmusic nextsong` (skip) không hoạt động đúng cách
+- 🐛 **Fixed**: Sửa lỗi spam nhạc khi ra vào region nhanh - cải thiện logic kiểm tra region
+- 🐛 **Fixed**: Sửa lỗi spam nhạc khi vào region, ra khỏi region, rồi vào lại cùng region - thêm cooldown 2 giây để tránh phát lại
+
+### Technical / Kỹ thuật
+- 🔨 **Code**: Cải thiện logic tự động chuyển bài trong `playNextSong` - đảm bảo task tự động chuyển bài hoạt động đúng
+- 🔨 **Code**: Sửa logic skip để không bị conflict với task tự động chuyển bài
+- 🔨 **Code**: Cải thiện logic kiểm tra region trong `RegionListener` để tránh spam khi ra vào nhanh
+- 🔨 **Code**: Thêm kiểm tra region trong `playNextSong` để đảm bảo player vẫn ở trong region trước khi phát bài tiếp theo
+- 🔨 **Code**: Thêm method `isMusicPlaying()` và `isMusicPlayingForRegion()` trong `MusicManager` để kiểm tra trạng thái phát nhạc
+- 🔨 **Code**: Thêm tracking thời gian ra khỏi region trong `RegionListener` - nếu vào lại cùng region trong vòng 2 giây sẽ không phát lại (tránh spam)
+
+---
+
 ## [1.3] - 2024
 
 ### Added / Thêm mới
