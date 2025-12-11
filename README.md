@@ -43,6 +43,8 @@ A lightweight Minecraft plugin that automatically plays music/sounds when player
 - 🚫 **No Overlap**: Prevents music overlap from different regions
 - 📝 **Customizable Messages**: All messages can be customized via `lang.yml`
 - 🌍 **WorldGuard Integration**: Works with all WorldGuard regions
+- 🎼 **Custom Song Names**: Customize display names for songs in `musics.yml`
+- 📢 **Now Playing Notifications**: Shows "Now playing: [song name]" when a song starts
 
 ## Requirements
 
@@ -86,17 +88,24 @@ musics:
   spawn:
     sound: MUSIC_DISC_CAT        # Vanilla sound name
     interval: 185                 # Duration in seconds
+    name: "Spawn Theme"           # Display name (optional, defaults to key name)
   custommusic:
     sound: records.cat            # Custom sound (ItemsAdder, etc.)
     interval: 185
+    name: "Custom Music"          # Display name (optional)
   boss:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
+    name: "Boss Battle"          # Display name (optional)
 ```
 
 **Sound Format:**
 - Vanilla: `MUSIC_DISC_CAT`, `minecraft:music_disc.cat`
 - Custom: `records.cat`, `itemsadder:records.cat`, `namespace:sound_name`
+
+**Display Name:**
+- Field `name` is optional - if not provided, the key name will be used as display name
+- Display name is shown in "Now playing" notifications
 
 ### lang.yml
 
@@ -108,6 +117,7 @@ messages:
   player-only: "&cThis command is for players only!"
   toggle-off: "&cMusic turned off!"
   toggle-on: "&aMusic turned on!"
+  now-playing: "&aNow playing: &f{song}"  # Song name notification
   # ... and more
 ```
 
@@ -119,7 +129,9 @@ messages:
 | `/regionmusic playmusic` | Manually play music for current region | `regionmusic.admin` |
 | `/regionmusic stopmusic` | Stop currently playing music | `regionmusic.admin` |
 | `/regionmusic togglemusic` | Toggle music on/off | `regionmusic.admin` |
+| `/regionmusic nextsong` | Skip to next song in playlist | `regionmusic.admin` |
 | `/regionmusic about` | Show plugin information | `regionmusic.admin` |
+| `/rm` | Alias for `/regionmusic` | `regionmusic.admin` |
 | `/togglemusic` | Toggle music on/off (for all players) | None |
 
 ## Permissions
@@ -146,6 +158,7 @@ musics:
   spawn:
     sound: MUSIC_DISC_CAT
     interval: 185
+    name: "Spawn Theme"  # Optional
 ```
 
 ### Example 2: Multiple Songs (Playlist)
@@ -165,12 +178,15 @@ musics:
   dungeon_theme_1:
     sound: MUSIC_DISC_CHIRP
     interval: 185
+    name: "Dungeon Theme 1"  # Optional
   dungeon_theme_2:
     sound: MUSIC_DISC_FAR
     interval: 197
+    name: "Dungeon Theme 2"  # Optional
   boss_music:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
+    name: "Boss Battle"  # Optional
 ```
 
 ### Example 3: Custom Sounds (ItemsAdder)
@@ -181,6 +197,7 @@ musics:
   custom:
     sound: itemsadder:records.custom_music
     interval: 200
+    name: "Custom Music"  # Optional
 ```
 
 ---
@@ -198,6 +215,8 @@ musics:
 - 🚫 **Không chồng chéo**: Ngăn chặn nhạc chồng chéo từ các vùng khác nhau
 - 📝 **Tùy chỉnh thông báo**: Tất cả thông báo có thể tùy chỉnh qua `lang.yml`
 - 🌍 **Tích hợp WorldGuard**: Hoạt động với tất cả các khu vực WorldGuard
+- 🎼 **Tùy chỉnh tên bài hát**: Tùy chỉnh tên hiển thị của bài nhạc trong `musics.yml`
+- 📢 **Thông báo đang phát**: Hiển thị "Đang phát bài: [tên bài]" khi bắt đầu phát nhạc
 
 ## Yêu cầu
 
@@ -241,17 +260,24 @@ musics:
   spawn:
     sound: MUSIC_DISC_CAT        # Tên âm thanh vanilla
     interval: 185                 # Thời lượng tính bằng giây
+    name: "Spawn Theme"           # Tên hiển thị (tùy chọn, mặc định dùng tên key)
   custommusic:
     sound: records.cat            # Âm thanh tùy chỉnh (ItemsAdder, v.v.)
     interval: 185
+    name: "Custom Music"          # Tên hiển thị (tùy chọn)
   boss:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
+    name: "Boss Battle"           # Tên hiển thị (tùy chọn)
 ```
 
 **Định dạng Sound:**
 - Vanilla: `MUSIC_DISC_CAT`, `minecraft:music_disc.cat`
 - Tùy chỉnh: `records.cat`, `itemsadder:records.cat`, `namespace:sound_name`
+
+**Tên hiển thị:**
+- Field `name` là tùy chọn - nếu không có, sẽ dùng tên key làm tên hiển thị
+- Tên hiển thị được dùng trong thông báo "Đang phát bài"
 
 ### lang.yml
 
@@ -263,6 +289,7 @@ messages:
   player-only: "&cLệnh này chỉ dành cho người chơi!"
   toggle-off: "&cĐã tắt nhạc!"
   toggle-on: "&aĐã bật nhạc!"
+  now-playing: "&aĐang phát bài: &f{song}"  # Thông báo tên bài hát
   # ... và nhiều hơn nữa
 ```
 
@@ -274,7 +301,9 @@ messages:
 | `/regionmusic playmusic` | Phát nhạc thủ công cho region hiện tại | `regionmusic.admin` |
 | `/regionmusic stopmusic` | Dừng nhạc đang phát | `regionmusic.admin` |
 | `/regionmusic togglemusic` | Bật/tắt nhạc | `regionmusic.admin` |
+| `/regionmusic nextsong` | Chuyển sang bài nhạc tiếp theo | `regionmusic.admin` |
 | `/regionmusic about` | Hiển thị thông tin plugin | `regionmusic.admin` |
+| `/rm` | Alias cho `/regionmusic` | `regionmusic.admin` |
 | `/togglemusic` | Bật/tắt nhạc (cho tất cả người chơi) | Không cần |
 
 ## Quyền
@@ -301,6 +330,7 @@ musics:
   spawn:
     sound: MUSIC_DISC_CAT
     interval: 185
+    name: "Spawn Theme"  # Tùy chọn
 ```
 
 ### Ví dụ 2: Nhiều nhạc (Playlist)
@@ -320,12 +350,15 @@ musics:
   dungeon_theme_1:
     sound: MUSIC_DISC_CHIRP
     interval: 185
+    name: "Dungeon Theme 1"  # Tùy chọn
   dungeon_theme_2:
     sound: MUSIC_DISC_FAR
     interval: 197
+    name: "Dungeon Theme 2"  # Tùy chọn
   boss_music:
     sound: MUSIC_DISC_PIGSTEP
     interval: 148
+    name: "Boss Battle"  # Tùy chọn
 ```
 
 ### Ví dụ 3: Âm thanh tùy chỉnh (ItemsAdder)
@@ -336,6 +369,7 @@ musics:
   custom:
     sound: itemsadder:records.custom_music
     interval: 200
+    name: "Custom Music"  # Tùy chọn
 ```
 
 ---
@@ -347,12 +381,16 @@ musics:
 - Music automatically stops when players leave the region
 - Multiple songs play sequentially, then loop back to the first song
 - Use `/regionmusic reload` after editing config files
+- "Now playing" notifications are shown when a song starts or when skipping
+- Custom song names can be set in `musics.yml` with the `name` field
 
 - Nhạc **mặc định được bật** cho tất cả người chơi
 - Người chơi có thể bật/tắt nhạc bằng `/togglemusic`
 - Nhạc tự động dừng khi người chơi rời khỏi region
 - Nhiều bài nhạc phát tuần tự, sau đó quay lại bài đầu
 - Sử dụng `/regionmusic reload` sau khi chỉnh sửa file cấu hình
+- Thông báo "Đang phát bài" được hiển thị khi bắt đầu phát hoặc khi skip
+- Có thể tùy chỉnh tên bài hát trong `musics.yml` với field `name`
 
 ---
 
