@@ -1,0 +1,15 @@
+musics:
+  spawn:
+    sound: MUSIC_DISC_CAT
+    interval: 185 # Nhạc dài bao nhiêu giây? Đặt thời lượng ở đây, đây là khoảng thời gian lặp lại, có thể là nhạc tùy chỉnh hoặc nhạc vanilla của bạn
+  custommusic:
+    sound: records.cat # hỗ trợ phiên bản chuỗi cho nhạc tùy chỉnh như itemsadder, v.v.
+    interval: 185
+  boss:
+    sound: MUSIC_DISC_PIGSTEP
+    interval: 148
+  boss2:
+    sound: MUSIC_DISC_OTHERSIDE
+    interval: 180
+
+

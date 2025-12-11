@@ -1,0 +1,35 @@
+messages:
+  # Permission messages
+  no-permission: "&cBạn không có quyền sử dụng lệnh này!"
+  player-only: "&cLệnh này chỉ dành cho người chơi!"
+  
+  # Command usage
+  usage: "&cSử dụng: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  
+  # Reload
+  reload-success: "&aĐã tải lại cấu hình RegionMusic!"
+  
+  # Play music
+  playmusic-success: "&aĐã phát nhạc cho khu vực: {region}"
+  playmusic-no-region: "&cBạn không ở trong khu vực có nhạc!"
+  
+  # Stop music
+  stopmusic-success: "&aĐã dừng nhạc!"
+  
+  # Toggle music
+  toggle-off: "&cĐã tắt nhạc!"
+  toggle-on: "&aĐã bật nhạc!"
+  
+  # About command
+  about-header: "&6========== &eRegionMusic &6=========="
+  about-version: "&7Version: &f{version}"
+  about-author: "&7Author: &f{author}"
+  about-api: "&7API Version: &f{api}"
+  about-description: "&7Description: &fPhát nhạc tự động khi vào/ra khu vực WorldGuard"
+  about-features-header: "&7Features:"
+  about-feature-1: "&7  - Hỗ trợ nhiều nhạc trong 1 region"
+  about-feature-2: "&7  - Phát tuần tự và tự động loop"
+  about-feature-3: "&7  - Hỗ trợ vanilla và custom sounds"
+  about-feature-4: "&7  - Tối ưu hiệu năng"
+  about-footer: "&6================================"
+
