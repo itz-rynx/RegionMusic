@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/badge/version-1.7-blue.svg)](https://github.com/rynx/RegionMusic)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21+-green.svg)](https://www.minecraft.net/)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
-[![Discord]](https://dcbadge.limes.pink/api/shield/695998203065008178))
+[![Discord](https://dcbadge.limes.pink/api/shield/695998203065008178)]([https://www.oracle.com/java/](https://dcbadge.limes.pink/api/shield/695998203065008178))
 [![Author](https://img.shields.io/badge/author-rynx-purple.svg)](https://github.com/itz-rynx)
 
 A lightweight Minecraft plugin that automatically plays music/sounds when players enter or leave WorldGuard regions. Supports multiple songs per region with sequential playback and automatic looping.
