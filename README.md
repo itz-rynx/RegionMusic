@@ -1,9 +1,10 @@
 # RegionMusic
 
-[![Version](https://img.shields.io/badge/version-1.9-blue.svg)](https://github.com/rynx/RegionMusic)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.5-green.svg)](https://www.minecraft.net/)
-[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
-[![Author](https://img.shields.io/badge/author-rynx-purple.svg)](https://github.com/rynx)
+[![GitHub](https://img.shields.io/badge/GitHub-itz--rynx-blue?logo=github)](https://github.com/itz-rynx)
+[![Discord](https://img.shields.io/badge/Discord-_q.bao1702-5865F2?logo=discord)](https://discord.com/users/695998203065008178)
+[![Version](https://img.shields.io/badge/Version-v1.0-green)](https://github.com/itz-rynx)
+[![Paper](https://img.shields.io/badge/Paper-1.21+-blue)](https://papermc.io/)
+[![Java](https://img.shields.io/badge/Java-21-orange?logo=java)](https://www.oracle.com/java/)
 
 **🎵 Music that follows you, wherever you go! 🎵**
 
