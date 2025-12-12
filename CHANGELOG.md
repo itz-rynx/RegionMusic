@@ -1,220 +1,225 @@
-# Changelog / Nhật ký thay đổi
+# Changelog
 
 All notable changes to RegionMusic will be documented in this file.
 
-Tất cả các thay đổi đáng chú ý của RegionMusic sẽ được ghi lại trong file này.
+---
+
+## [1.9]
+
+### Added
+- ✨ **Config Version & Debug**: Added version management and debug mode in `config.yml`
+  - Version automatically updates with plugin version
+  - Debug mode to enable/disable detailed logging in console
+- ✨ **Custom Logger**: Added custom logger with beautiful **RYNX** prefix
+  - All logs display with `[RYNX]` prefix in yellow/red/yellow colors
+  - Debug logs have `[DEBUG]` prefix when debug mode is enabled
+- ✨ **GUI**: Added graphical interface to view region and song information
+  - Command: `/regionmusic gui` or `/rm gui`
+  - Shows current region and all configured regions
+  - Displays detailed information: number of songs, play mode, song list
+- ✨ **Add Music via Chat**: Added ability to add new songs to `musics.yml` through chat
+  - Command: `/regionmusic addmusic <song_name>`
+  - Enter information in format: `sound|interval|name|volume|pitch`
+  - Cancel with `/cancel` command
+- ✨ **Cancel Command**: Added `/cancel` command to cancel adding music process
+
+### Changed
+- 📝 **Config**: Added `version` and `debug` fields to `config.yml`
+- 🔧 **Logger**: Replaced default logger with CustomLogger with RYNX prefix
+- 📝 **Plugin.yml**: Added `cancel` command and updated usage of `regionmusic` command
+
+### Technical
+- 🔨 **Code**: Created `CustomLogger` class to manage logs with beautiful format
+- 🔨 **Code**: Created `ConfigManager` class to manage `config.yml` with version and debug
+- 🔨 **Code**: Created `RegionMusicGUI` class to display GUI
+- 🔨 **Code**: Created `ChatListener` class to handle chat when adding songs
+- 🔨 **Code**: Created `GUIListener` class to handle click events in GUI
+- 🔨 **Code**: Added `getAllRegions()` and `addMusic()` methods in `RegionConfigManager`
+- 🔨 **Code**: Updated `RegionMusicCommand` to support `gui` and `addmusic` commands
+- 🔨 **Code**: Updated `RegionMusicTabCompleter` to add tab completion for new commands
 
 ---
 
-## [1.9] - 2024
+## [1.8]
 
-### Added / Thêm mới
-- ✨ **Config Version & Debug**: Thêm quản lý version và debug mode trong `config.yml`
-  - Version tự động cập nhật theo phiên bản plugin
-  - Debug mode để bật/tắt log chi tiết trong console
-- ✨ **Custom Logger**: Thêm logger tùy chỉnh với prefix **RYNX** đẹp mắt
-  - Tất cả log hiển thị với prefix `[RYNX]` màu vàng/đỏ/vàng
-  - Log debug có prefix `[DEBUG]` khi debug mode được bật
-- ✨ **GUI**: Thêm giao diện đồ họa để xem thông tin region và songs
-  - Command: `/regionmusic gui` hoặc `/rm gui`
-  - Hiển thị region hiện tại và tất cả regions được cấu hình
-  - Hiển thị thông tin chi tiết: số bài hát, chế độ phát, danh sách bài hát
-- ✨ **Add Music via Chat**: Thêm khả năng thêm bài hát mới vào `musics.yml` thông qua chat
-  - Command: `/regionmusic addmusic <tên_bài_hát>`
-  - Nhập thông tin theo format: `sound|interval|name|volume|pitch`
-  - Hủy bằng lệnh `/cancel`
-- ✨ **Cancel Command**: Thêm lệnh `/cancel` để hủy quá trình thêm bài hát
+### Added
+- ✨ **Play Mode**: Added ability to choose playback mode: sequential (in order) or random (shuffle)
+  - Sequential: Plays songs in order from first to last, then loops back
+  - Random: Plays songs randomly, no duplicate with currently playing song
+- ✨ **Multi-Language Support**: Added multi-language support with configurable language selection
+  - Supports Vietnamese (vi), English (en), and Chinese (zh)
+  - Language files stored in `lang/` folder
+- ✨ **Persistent Toggle State**: Toggle music preference is saved and persists across server restarts
 
-### Changed / Thay đổi
-- 📝 **Config**: Thêm field `version` và `debug` vào `config.yml`
-- 🔧 **Logger**: Thay thế logger mặc định bằng CustomLogger với prefix RYNX
-- 📝 **Plugin.yml**: Thêm lệnh `cancel` và cập nhật usage của `regionmusic` command
+### Changed
+- 📝 **Config**: Added `playmode` field (sequential or random, default: sequential) to `regions.yml`
+- 🔧 **Playback**: Updated song switching logic to support both sequential and random modes
+- 📝 **Config**: Added `config.yml` file for language configuration
+- 📝 **Messages**: Moved language files to `lang/` folder structure
 
-### Technical / Kỹ thuật
-- 🔨 **Code**: Tạo class `CustomLogger` để quản lý log với format đẹp
-- 🔨 **Code**: Tạo class `ConfigManager` để quản lý `config.yml` với version và debug
-- 🔨 **Code**: Tạo class `RegionMusicGUI` để hiển thị GUI
-- 🔨 **Code**: Tạo class `ChatListener` để xử lý chat khi thêm bài hát
-- 🔨 **Code**: Tạo class `GUIListener` để xử lý sự kiện click trong GUI
-- 🔨 **Code**: Thêm method `getAllRegions()` và `addMusic()` trong `RegionConfigManager`
-- 🔨 **Code**: Cập nhật `RegionMusicCommand` để hỗ trợ lệnh `gui` và `addmusic`
-- 🔨 **Code**: Cập nhật `RegionMusicTabCompleter` để thêm tab completion cho lệnh mới
+### Technical
+- 🔨 **Code**: Added Map `regionPlayModeMap` in `RegionConfigManager` to store playmode for each region
+- 🔨 **Code**: Added `getPlayModeForRegion()` and `isRandomMode()` methods in `RegionConfigManager`
+- 🔨 **Code**: Added `getNextSongIndex()` method in `MusicManager` to calculate next song based on playmode
+- 🔨 **Code**: Added Random instance to support random mode
+- 🔨 **Code**: Created `MessageManager` to load messages from language files
+- 🔨 **Code**: Added `MusicToggleManager` to persist toggle state to `toggles.yml`
 
 ---
 
-## [1.8] - 2024
+## [1.7]
 
-### Added / Thêm mới
-- ✨ **Play Mode**: Thêm khả năng chọn chế độ phát nhạc: sequential (theo lượt) hoặc random (ngẫu nhiên)
-  - Sequential: Phát nhạc theo thứ tự từ đầu đến cuối, sau đó loop lại
-  - Random: Phát nhạc ngẫu nhiên, không trùng với bài đang phát
+### Added
+- ✨ **Volume Control**: Added ability to customize volume for each song in `musics.yml`
+- ✨ **Pitch Control**: Added ability to customize pitch for each song in `musics.yml`
 
-### Changed / Thay đổi
-- 📝 **Config**: Thêm field `playmode` (sequential hoặc random, mặc định: sequential) vào `regions.yml`
-- 🔧 **Playback**: Cập nhật logic chuyển bài để hỗ trợ cả sequential và random mode
+### Changed
+- 📝 **Config**: Added `volume` field (0.0 - 1.0, default: 1.0) and `pitch` field (0.5 - 2.0, default: 1.0) to `musics.yml`
+- 🔧 **Sound Playback**: Updated `playSound()` to use volume and pitch from config instead of hardcoded values
 
-### Technical / Kỹ thuật
-- 🔨 **Code**: Thêm Map `regionPlayModeMap` trong `RegionConfigManager` để lưu trữ playmode cho mỗi region
-- 🔨 **Code**: Thêm method `getPlayModeForRegion()` và `isRandomMode()` trong `RegionConfigManager`
-- 🔨 **Code**: Thêm method `getNextSongIndex()` trong `MusicManager` để tính toán bài tiếp theo dựa trên playmode
-- 🔨 **Code**: Thêm Random instance để hỗ trợ random mode
-
----
-
-## [1.7] - 2024
-
-### Added / Thêm mới
-- ✨ **Volume Control**: Thêm khả năng tùy chỉnh volume (âm lượng) cho từng bài nhạc trong `musics.yml`
-- ✨ **Pitch Control**: Thêm khả năng tùy chỉnh pitch (cao độ) cho từng bài nhạc trong `musics.yml`
-
-### Changed / Thay đổi
-- 📝 **Config**: Thêm field `volume` (0.0 - 1.0, mặc định: 1.0) và `pitch` (0.5 - 2.0, mặc định: 1.0) vào `musics.yml`
-- 🔧 **Sound Playback**: Cập nhật `playSound()` để sử dụng volume và pitch từ config thay vì hardcode
-
-### Technical / Kỹ thuật
-- 🔨 **Code**: Thêm Map `musicVolumeMap` và `musicPitchMap` trong `RegionConfigManager` để lưu trữ volume và pitch
-- 🔨 **Code**: Thêm method `getVolumeForMusic()` và `getPitchForMusic()` trong `RegionConfigManager`
-- 🔨 **Code**: Cập nhật `playSound()` để nhận volume và pitch làm tham số
-- 🔨 **Code**: Thêm validation để giới hạn volume trong khoảng 0.0 - 1.0 và pitch trong khoảng 0.5 - 2.0
+### Technical
+- 🔨 **Code**: Added Map `musicVolumeMap` and `musicPitchMap` in `RegionConfigManager` to store volume and pitch
+- 🔨 **Code**: Added `getVolumeForMusic()` and `getPitchForMusic()` methods in `RegionConfigManager`
+- 🔨 **Code**: Updated `playSound()` to accept volume and pitch as parameters
+- 🔨 **Code**: Added validation to limit volume in range 0.0 - 1.0 and pitch in range 0.5 - 2.0
 
 ---
 
-## [1.6] - 2024
+## [1.6]
 
-### Changed / Thay đổi
-- 🔒 **Permissions**: Tách permission riêng cho từng lệnh thay vì chỉ có `regionmusic.admin`
-  - `regionmusic.reload` - Cho phép sử dụng `/regionmusic reload`
-  - `regionmusic.playmusic` - Cho phép sử dụng `/regionmusic playmusic`
-  - `regionmusic.stopmusic` - Cho phép sử dụng `/regionmusic stopmusic`
-  - `regionmusic.togglemusic` - Cho phép sử dụng `/regionmusic togglemusic`
-  - `regionmusic.nextsong` - Cho phép sử dụng `/regionmusic nextsong`
-  - `regionmusic.about` - Cho phép sử dụng `/regionmusic about`
-  - `regionmusic.admin` - Permission cha bao gồm tất cả các permission trên (backward compatible)
+### Changed
+- 🔒 **Permissions**: Separated permissions for each command instead of only `regionmusic.admin`
+  - `regionmusic.reload` - Allows use of `/regionmusic reload`
+  - `regionmusic.playmusic` - Allows use of `/regionmusic playmusic`
+  - `regionmusic.stopmusic` - Allows use of `/regionmusic stopmusic`
+  - `regionmusic.togglemusic` - Allows use of `/regionmusic togglemusic`
+  - `regionmusic.nextsong` - Allows use of `/regionmusic nextsong`
+  - `regionmusic.about` - Allows use of `/regionmusic about`
+  - `regionmusic.admin` - Parent permission including all above permissions (backward compatible)
 
-### Technical / Kỹ thuật
-- 🔨 **Code**: Cập nhật `RegionMusicCommand` để kiểm tra permission riêng cho từng lệnh
-- 🔨 **Code**: Cập nhật `plugin.yml` để định nghĩa các permission mới với parent permission
-
----
-
-## [1.5] - 2024
-
-### Added / Thêm mới
-- ✨ **Custom Song Names**: Thêm khả năng tùy chỉnh tên bài hát trong `musics.yml` với field `name`
-- ✨ **Now Playing Notification**: Hiển thị thông báo "Đang phát bài: [tên bài]" khi bắt đầu phát một bài nhạc
-- ✨ **Skip Notification**: Hiển thị thông báo tên bài hát khi dùng lệnh `/regionmusic nextsong` (skip)
-
-### Changed / Thay đổi
-- 📝 **Config**: Thêm field `name` (tùy chọn) vào `musics.yml` để tùy chỉnh tên hiển thị của bài nhạc
-- 📝 **Messages**: Thêm message `now-playing` vào `lang.yml` để tùy chỉnh thông báo đang phát
-
-### Technical / Kỹ thuật
-- 🔨 **Code**: Thêm method `getDisplayNameForMusic()` trong `RegionConfigManager` để lấy tên hiển thị của bài nhạc
-- 🔨 **Code**: Thêm Map `musicDisplayNameMap` để lưu trữ tên hiển thị tùy chỉnh
-- 🔨 **Code**: Cập nhật `playNextSong()` để hiển thị thông báo khi phát bài nhạc mới
+### Technical
+- 🔨 **Code**: Updated `RegionMusicCommand` to check individual permissions for each command
+- 🔨 **Code**: Updated `plugin.yml` to define new permissions with parent permission
 
 ---
 
-## [1.4] - 2024
+## [1.5]
 
-### Fixed / Sửa lỗi
-- 🐛 **Fixed**: Sửa lỗi nhạc không tự động chuyển bài - bài 1 phát xong sẽ tự động chuyển sang bài 2
-- 🐛 **Fixed**: Sửa lỗi lệnh `/regionmusic nextsong` (skip) không hoạt động đúng cách
-- 🐛 **Fixed**: Sửa lỗi spam nhạc khi ra vào region nhanh - cải thiện logic kiểm tra region
-- 🐛 **Fixed**: Sửa lỗi spam nhạc khi vào region, ra khỏi region, rồi vào lại cùng region - thêm cooldown 2 giây để tránh phát lại
+### Added
+- ✨ **Custom Song Names**: Added ability to customize song names in `musics.yml` with `name` field
+- ✨ **Now Playing Notification**: Shows "Now playing: [song name]" notification when starting to play a song
+- ✨ **Skip Notification**: Shows song name notification when using `/regionmusic nextsong` (skip) command
 
-### Technical / Kỹ thuật
-- 🔨 **Code**: Cải thiện logic tự động chuyển bài trong `playNextSong` - đảm bảo task tự động chuyển bài hoạt động đúng
-- 🔨 **Code**: Sửa logic skip để không bị conflict với task tự động chuyển bài
-- 🔨 **Code**: Cải thiện logic kiểm tra region trong `RegionListener` để tránh spam khi ra vào nhanh
-- 🔨 **Code**: Thêm kiểm tra region trong `playNextSong` để đảm bảo player vẫn ở trong region trước khi phát bài tiếp theo
-- 🔨 **Code**: Thêm method `isMusicPlaying()` và `isMusicPlayingForRegion()` trong `MusicManager` để kiểm tra trạng thái phát nhạc
-- 🔨 **Code**: Thêm tracking thời gian ra khỏi region trong `RegionListener` - nếu vào lại cùng region trong vòng 2 giây sẽ không phát lại (tránh spam)
+### Changed
+- 📝 **Config**: Added `name` field (optional) to `musics.yml` to customize display name of songs
+- 📝 **Messages**: Added `now-playing` message to `lang.yml` to customize now playing notification
 
----
-
-## [1.3] - 2024
-
-### Added / Thêm mới
-- ✨ **New Alias**: Thêm alias `rm` cho command `/regionmusic`
-  - Người chơi có thể sử dụng `/rm` thay vì `/regionmusic` để tiện lợi hơn
-  - Ví dụ: `/rm reload`, `/rm about`, `/rm playmusic`
+### Technical
+- 🔨 **Code**: Added `getDisplayNameForMusic()` method in `RegionConfigManager` to get display name of songs
+- 🔨 **Code**: Added Map `musicDisplayNameMap` to store custom display names
+- 🔨 **Code**: Updated `playNextSong()` to display notification when playing new song
 
 ---
 
-## [1.2] - 2024
+## [1.4]
 
-### Added / Thêm mới
-- ✨ **New Command**: `/regionmusic nextsong` - Chuyển sang bài nhạc tiếp theo trong khu vực hiện tại
-  - Cho phép người chơi skip bài nhạc đang phát và chuyển sang bài tiếp theo
-  - Tự động loop về bài đầu nếu đang ở bài cuối
-  - Chỉ hoạt động khi đang ở trong region có nhạc
+### Fixed
+- 🐛 **Fixed**: Fixed music not automatically switching - song 1 will automatically switch to song 2 after finishing
+- 🐛 **Fixed**: Fixed `/regionmusic nextsong` (skip) command not working correctly
+- 🐛 **Fixed**: Fixed music spam when quickly entering/exiting regions - improved region checking logic
+- 🐛 **Fixed**: Fixed music spam when entering region, leaving region, then re-entering same region - added 2 second cooldown to prevent replay
 
-### Changed / Thay đổi
-- 📝 **File Rename**: Đổi tên file `msg.yml` thành `lang.yml` để dễ quản lý hơn
-- 🔧 **Default Toggle**: Togglemusic mặc định là **BẬT** cho tất cả người chơi mới
-- ⚡ **Performance**: Cải thiện hiệu năng và tối ưu hóa code
-
-### Fixed / Sửa lỗi
-- 🐛 **Fixed**: Sửa lỗi nhạc bị spam/double khi vào region có nhiều nhạc
-- 🐛 **Fixed**: Sửa lỗi nhiều bài nhạc phát cùng lúc thay vì tuần tự
-- 🐛 **Fixed**: Cải thiện logic kiểm tra task để tránh race condition
-
-### Technical / Kỹ thuật
-- 🔨 **Code**: Cải thiện MusicManager để đảm bảo chỉ một task đang chạy
-- 🔨 **Code**: Thêm kiểm tra region đang phát để tránh phát lại không cần thiết
-- 🔨 **Code**: Tăng delay để đảm bảo task cũ được hủy hoàn toàn
+### Technical
+- 🔨 **Code**: Improved automatic song switching logic in `playNextSong` - ensured automatic song switching task works correctly
+- 🔨 **Code**: Fixed skip logic to not conflict with automatic song switching task
+- 🔨 **Code**: Improved region checking logic in `RegionListener` to prevent spam when quickly entering/exiting
+- 🔨 **Code**: Added region check in `playNextSong` to ensure player is still in region before playing next song
+- 🔨 **Code**: Added `isMusicPlaying()` and `isMusicPlayingForRegion()` methods in `MusicManager` to check music playing status
+- 🔨 **Code**: Added exit time tracking in `RegionListener` - if re-entering same region within 2 seconds will not replay (prevents spam)
 
 ---
 
-## [1.1] - 2024
+## [1.3]
 
-### Added / Thêm mới
-- 🎵 **Multiple Songs**: Hỗ trợ nhiều nhạc trong 1 region với phát tuần tự
-- 🔂 **Auto Loop**: Tự động quay lại bài đầu sau khi phát hết playlist
-- 📝 **Message System**: Thêm hệ thống quản lý messages qua file `msg.yml`
-
-### Changed / Thay đổi
-- 🔄 **Playback**: Thay đổi từ phát một nhạc sang hỗ trợ playlist
-- 📋 **Config**: Cập nhật cấu trúc `regions.yml` để hỗ trợ list nhạc
+### Added
+- ✨ **New Alias**: Added `rm` alias for `/regionmusic` command
+  - Players can use `/rm` instead of `/regionmusic` for convenience
+  - Examples: `/rm reload`, `/rm about`, `/rm playmusic`
 
 ---
 
-## [1.0] - 2024
+## [1.2]
 
-### Added / Thêm mới
-- 🎵 **Initial Release**: Phiên bản đầu tiên của RegionMusic
-- 🌍 **WorldGuard Integration**: Tích hợp với WorldGuard để phát nhạc khi vào/ra region
-- 🔊 **Sound Support**: Hỗ trợ cả vanilla và custom sounds (ItemsAdder, etc.)
+### Added
+- ✨ **New Command**: `/regionmusic nextsong` - Skip to next song in current region
+  - Allows players to skip currently playing song and switch to next song
+  - Automatically loops back to first song if at last song
+  - Only works when in a region with music
+
+### Changed
+- 📝 **File Rename**: Renamed `msg.yml` file to `lang.yml` for easier management
+- 🔧 **Default Toggle**: Togglemusic defaults to **ON** for all new players
+- ⚡ **Performance**: Improved performance and optimized code
+
+### Fixed
+- 🐛 **Fixed**: Fixed music spam/double when entering region with multiple songs
+- 🐛 **Fixed**: Fixed multiple songs playing simultaneously instead of sequentially
+- 🐛 **Fixed**: Improved task checking logic to avoid race conditions
+
+### Technical
+- 🔨 **Code**: Improved MusicManager to ensure only one task is running
+- 🔨 **Code**: Added check for currently playing region to avoid unnecessary replay
+- 🔨 **Code**: Increased delay to ensure old task is completely cancelled
+
+---
+
+## [1.1]
+
+### Added
+- 🎵 **Multiple Songs**: Support for multiple songs in 1 region with sequential playback
+- 🔂 **Auto Loop**: Automatically loops back to first song after playlist ends
+- 📝 **Message System**: Added message management system via `msg.yml` file
+
+### Changed
+- 🔄 **Playback**: Changed from playing one song to supporting playlists
+- 📋 **Config**: Updated `regions.yml` structure to support song lists
+
+---
+
+## [1.0]
+
+### Added
+- 🎵 **Initial Release**: First version of RegionMusic
+- 🌍 **WorldGuard Integration**: Integrated with WorldGuard to play music when entering/leaving regions
+- 🔊 **Sound Support**: Supports both vanilla and custom sounds (ItemsAdder, etc.)
 - 🎮 **Commands**: 
-  - `/regionmusic reload` - Tải lại cấu hình
-  - `/regionmusic playmusic` - Phát nhạc thủ công
-  - `/regionmusic stopmusic` - Dừng nhạc
-  - `/regionmusic togglemusic` - Bật/tắt nhạc
-  - `/regionmusic about` - Thông tin plugin
-  - `/togglemusic` - Bật/tắt nhạc (cho tất cả người chơi)
+  - `/regionmusic reload` - Reload configuration
+  - `/regionmusic playmusic` - Manually play music
+  - `/regionmusic stopmusic` - Stop music
+  - `/regionmusic togglemusic` - Toggle music on/off
+  - `/regionmusic about` - Plugin information
+  - `/togglemusic` - Toggle music on/off (for all players)
 - 📝 **Configuration**: 
-  - `regions.yml` - Cấu hình region và nhạc
-  - `musics.yml` - Cấu hình thuộc tính nhạc
-- ⚡ **Performance**: Tối ưu hóa hiệu năng và ngăn chặn spam
-- 🚫 **No Overlap**: Ngăn chặn nhạc chồng chéo từ các vùng khác nhau
+  - `regions.yml` - Configure regions and music
+  - `musics.yml` - Configure music properties
+- ⚡ **Performance**: Optimized performance and prevented spam
+- 🚫 **No Overlap**: Prevents music overlap from different regions
 
 ---
 
-## Format / Định dạng
+## Format
 
-Format dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## Legend / Chú thích
+## Legend
 
-- ✨ **Added**: Tính năng mới
-- 🔄 **Changed**: Thay đổi trong chức năng hiện có
-- 🐛 **Fixed**: Sửa lỗi
-- 🔨 **Technical**: Thay đổi kỹ thuật
-- 📝 **Documentation**: Cập nhật tài liệu
-- ⚡ **Performance**: Cải thiện hiệu năng
-- 🔒 **Security**: Cập nhật bảo mật
-
+- ✨ **Added**: New features
+- 🔄 **Changed**: Changes in existing functionality
+- 🐛 **Fixed**: Bug fixes
+- 🔨 **Technical**: Technical changes
+- 📝 **Documentation**: Documentation updates
+- ⚡ **Performance**: Performance improvements
+- 🔒 **Security**: Security updates
