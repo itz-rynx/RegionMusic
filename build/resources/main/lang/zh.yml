@@ -1,0 +1,29 @@
+messages:
+  # Permission messages
+  no-permission: "&c您没有权限使用此命令！"
+  player-only: "&c此命令仅适用于玩家！"
+  
+  # Command usage
+  usage: "&c用法: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  
+  # Reload
+  reload-success: "&a已重新加载 RegionMusic 配置！"
+  
+  # Play music
+  playmusic-success: "&a正在为区域播放音乐: {region}"
+  playmusic-no-region: "&c您不在有音乐的区域中！"
+  
+  # Stop music
+  stopmusic-success: "&a音乐已停止！"
+  
+  # Toggle music
+  toggle-off: "&c音乐已禁用！"
+  toggle-on: "&a音乐已启用！"
+  
+  # Next song
+  nextsong-success: "&a已跳到下一首歌曲！"
+  nextsong-no-region: "&c您不在有音乐的区域中！"
+  
+  # Now playing
+  now-playing: "&a正在播放: &f{song}"
+

@@ -6,6 +6,61 @@ Tất cả các thay đổi đáng chú ý của RegionMusic sẽ được ghi l
 
 ---
 
+## [1.9] - 2024
+
+### Added / Thêm mới
+- ✨ **Config Version & Debug**: Thêm quản lý version và debug mode trong `config.yml`
+  - Version tự động cập nhật theo phiên bản plugin
+  - Debug mode để bật/tắt log chi tiết trong console
+- ✨ **Custom Logger**: Thêm logger tùy chỉnh với prefix **RYNX** đẹp mắt
+  - Tất cả log hiển thị với prefix `[RYNX]` màu vàng/đỏ/vàng
+  - Log debug có prefix `[DEBUG]` khi debug mode được bật
+- ✨ **GUI**: Thêm giao diện đồ họa để xem thông tin region và songs
+  - Command: `/regionmusic gui` hoặc `/rm gui`
+  - Hiển thị region hiện tại và tất cả regions được cấu hình
+  - Hiển thị thông tin chi tiết: số bài hát, chế độ phát, danh sách bài hát
+- ✨ **Add Music via Chat**: Thêm khả năng thêm bài hát mới vào `musics.yml` thông qua chat
+  - Command: `/regionmusic addmusic <tên_bài_hát>`
+  - Nhập thông tin theo format: `sound|interval|name|volume|pitch`
+  - Hủy bằng lệnh `/cancel`
+- ✨ **Cancel Command**: Thêm lệnh `/cancel` để hủy quá trình thêm bài hát
+
+### Changed / Thay đổi
+- 📝 **Config**: Thêm field `version` và `debug` vào `config.yml`
+- 🔧 **Logger**: Thay thế logger mặc định bằng CustomLogger với prefix RYNX
+- 📝 **Plugin.yml**: Thêm lệnh `cancel` và cập nhật usage của `regionmusic` command
+
+### Technical / Kỹ thuật
+- 🔨 **Code**: Tạo class `CustomLogger` để quản lý log với format đẹp
+- 🔨 **Code**: Tạo class `ConfigManager` để quản lý `config.yml` với version và debug
+- 🔨 **Code**: Tạo class `RegionMusicGUI` để hiển thị GUI
+- 🔨 **Code**: Tạo class `ChatListener` để xử lý chat khi thêm bài hát
+- 🔨 **Code**: Tạo class `GUIListener` để xử lý sự kiện click trong GUI
+- 🔨 **Code**: Thêm method `getAllRegions()` và `addMusic()` trong `RegionConfigManager`
+- 🔨 **Code**: Cập nhật `RegionMusicCommand` để hỗ trợ lệnh `gui` và `addmusic`
+- 🔨 **Code**: Cập nhật `RegionMusicTabCompleter` để thêm tab completion cho lệnh mới
+
+---
+
+## [1.8] - 2024
+
+### Added / Thêm mới
+- ✨ **Play Mode**: Thêm khả năng chọn chế độ phát nhạc: sequential (theo lượt) hoặc random (ngẫu nhiên)
+  - Sequential: Phát nhạc theo thứ tự từ đầu đến cuối, sau đó loop lại
+  - Random: Phát nhạc ngẫu nhiên, không trùng với bài đang phát
+
+### Changed / Thay đổi
+- 📝 **Config**: Thêm field `playmode` (sequential hoặc random, mặc định: sequential) vào `regions.yml`
+- 🔧 **Playback**: Cập nhật logic chuyển bài để hỗ trợ cả sequential và random mode
+
+### Technical / Kỹ thuật
+- 🔨 **Code**: Thêm Map `regionPlayModeMap` trong `RegionConfigManager` để lưu trữ playmode cho mỗi region
+- 🔨 **Code**: Thêm method `getPlayModeForRegion()` và `isRandomMode()` trong `RegionConfigManager`
+- 🔨 **Code**: Thêm method `getNextSongIndex()` trong `MusicManager` để tính toán bài tiếp theo dựa trên playmode
+- 🔨 **Code**: Thêm Random instance để hỗ trợ random mode
+
+---
+
 ## [1.7] - 2024
 
 ### Added / Thêm mới

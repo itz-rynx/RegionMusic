@@ -16,7 +16,7 @@ public class RegionMusicTabCompleter implements TabCompleter {
             List<String> completions = new ArrayList<>();
             String input = args[0].toLowerCase();
             
-            List<String> commands = Arrays.asList("reload", "playmusic", "stopmusic", "togglemusic", "nextsong", "about");
+            List<String> commands = Arrays.asList("reload", "playmusic", "stopmusic", "togglemusic", "nextsong", "about", "gui", "addmusic");
             for (String cmd : commands) {
                 if (cmd.toLowerCase().startsWith(input)) {
                     completions.add(cmd);

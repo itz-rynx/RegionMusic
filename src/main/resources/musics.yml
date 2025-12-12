@@ -6,7 +6,7 @@ musics:
     volume: 1.0 # Âm lượng (0.0 - 1.0, mặc định: 1.0)
     pitch: 1.0 # Cao độ (0.5 - 2.0, mặc định: 1.0)
   custommusic:
-    sound: records.cat # hỗ trợ phiên bản chuỗi cho nhạc tùy chỉnh như itemsadder, v.v.
+    sound: itemsadder:customsounds.test # hỗ trợ phiên bản chuỗi cho nhạc tùy chỉnh như itemsadder, v.v.
     interval: 185
     name: "Custom Music" # Tên hiển thị của bài nhạc (tùy chọn, mặc định sẽ dùng tên key)
     volume: 1.0 # Âm lượng (0.0 - 1.0, mặc định: 1.0)

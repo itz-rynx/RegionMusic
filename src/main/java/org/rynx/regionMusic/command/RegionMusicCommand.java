@@ -5,6 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.rynx.regionMusic.RegionMusic;
+import org.rynx.regionMusic.gui.RegionMusicGUI;
+import org.rynx.regionMusic.listener.ChatListener;
 import org.rynx.regionMusic.manager.MusicManager;
 import org.rynx.regionMusic.manager.RegionConfigManager;
 import org.rynx.regionMusic.util.WorldGuardUtils;
@@ -14,11 +16,15 @@ public class RegionMusicCommand implements CommandExecutor {
     private final RegionMusic plugin;
     private final MusicManager musicManager;
     private final RegionConfigManager configManager;
+    private final RegionMusicGUI gui;
+    private final ChatListener chatListener;
     
-    public RegionMusicCommand(RegionMusic plugin, MusicManager musicManager, RegionConfigManager configManager) {
+    public RegionMusicCommand(RegionMusic plugin, MusicManager musicManager, RegionConfigManager configManager, ChatListener chatListener) {
         this.plugin = plugin;
         this.musicManager = musicManager;
         this.configManager = configManager;
+        this.gui = new RegionMusicGUI(configManager);
+        this.chatListener = chatListener;
     }
     
     @Override
@@ -148,6 +154,41 @@ public class RegionMusicCommand implements CommandExecutor {
                 } else {
                     sender.sendMessage(msgManager.getMessage("nextsong-no-region"));
                 }
+                break;
+                
+            case "gui":
+                if (!sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgManager.getMessage("player-only"));
+                    return true;
+                }
+                Player playerGUI = (Player) sender;
+                gui.openGUI(playerGUI);
+                break;
+                
+            case "addmusic":
+                if (!sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgManager.getMessage("player-only"));
+                    return true;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage("§cUsage: /regionmusic addmusic <tên_bài_hát>");
+                    return true;
+                }
+                Player playerAdd = (Player) sender;
+                String musicName = args[1];
+                if (configManager.hasMusic(musicName)) {
+                    sender.sendMessage("§c§l✗ Bài hát §e" + musicName + " §cđã tồn tại!");
+                    return true;
+                }
+                chatListener.startAddingMusic(playerAdd, musicName);
                 break;
                 
             default:

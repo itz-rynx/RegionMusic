@@ -11,19 +11,21 @@ import org.rynx.regionMusic.manager.MusicToggleManager;
 public class PlayerQuitListener implements Listener {
     
     private final MusicManager musicManager;
-    private final MusicToggleManager toggleManager;
+    // Không còn cần toggleManager vì toggle state được persist và không xóa khi quit
+    // private final MusicToggleManager toggleManager;
     
     public PlayerQuitListener(RegionMusic plugin, MusicManager musicManager, MusicToggleManager toggleManager) {
         this.musicManager = musicManager;
-        this.toggleManager = toggleManager;
+        // this.toggleManager = toggleManager;
     }
     
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        // Cleanup: dừng nhạc và xóa dữ liệu khi player rời
+        // Cleanup: dừng nhạc khi player rời
         musicManager.removePlayer(player);
-        toggleManager.removePlayer(player);
+        // Không xóa toggle state - giữ lại để persist qua các lần vào/ra và restart
+        // toggleManager.removePlayer(player);
     }
 }
 

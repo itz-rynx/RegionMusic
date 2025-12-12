@@ -8,6 +8,7 @@ import org.rynx.regionMusic.RegionMusic;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class MusicManager {
@@ -16,6 +17,7 @@ public class MusicManager {
     private final RegionConfigManager configManager;
     private final MusicToggleManager toggleManager;
     private org.rynx.regionMusic.manager.MessageManager messageManager;
+    private final Random random = new Random();
     private final Map<UUID, BukkitTask> playerMusicTasks = new HashMap<>();
     // Track current song index và region cho mỗi player
     private final Map<UUID, Integer> playerCurrentSongIndex = new HashMap<>();
@@ -126,7 +128,7 @@ public class MusicManager {
         String soundName = configManager.getSoundForMusic(musicName);
         if (soundName == null) {
             // Nếu bài này không tồn tại, chuyển sang bài tiếp theo
-            int nextIndex = (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
+            int nextIndex = getNextSongIndex(regionName, musicList, currentIndex);
             playNextSong(player, regionName, musicList, nextIndex);
             return;
         }
@@ -155,8 +157,8 @@ public class MusicManager {
         // Phát bài nhạc hiện tại (CHỈ MỘT BÀI tại một thời điểm)
         playSound(player, soundName, volume, pitch);
         
-        // Tính toán index bài tiếp theo (loop nếu hết)
-        final int nextSongIndex = (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
+        // Tính toán index bài tiếp theo dựa trên playmode (sequential hoặc random)
+        final int nextSongIndex = getNextSongIndex(regionName, musicList, currentIndex);
         
         // Tạo task để phát bài tiếp theo sau khi bài này kết thúc
         BukkitTask task = new BukkitRunnable() {
@@ -300,8 +302,8 @@ public class MusicManager {
             playerCurrentSound.remove(playerId);
         }
         
-        // Tính toán index bài tiếp theo
-        int nextIndex = (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
+        // Tính toán index bài tiếp theo dựa trên playmode
+        int nextIndex = getNextSongIndex(currentRegion, musicList, currentIndex);
         
         // Đợi một tick để đảm bảo task cũ và sound đã được dừng hoàn toàn
         new BukkitRunnable() {
@@ -321,6 +323,33 @@ public class MusicManager {
                 playNextSong(player, currentRegion, musicList, nextIndex);
             }
         }.runTaskLater(plugin, 1L);
+    }
+    
+    /**
+     * Tính toán index bài tiếp theo dựa trên playmode (sequential hoặc random)
+     */
+    private int getNextSongIndex(String regionName, List<String> musicList, int currentIndex) {
+        if (musicList.isEmpty()) {
+            return 0;
+        }
+        
+        if (musicList.size() == 1) {
+            return 0; // Chỉ có 1 bài, luôn phát lại bài đó
+        }
+        
+        boolean isRandom = configManager.isRandomMode(regionName);
+        
+        if (isRandom) {
+            // Random mode: chọn ngẫu nhiên bài tiếp theo (không trùng với bài hiện tại)
+            int randomIndex;
+            do {
+                randomIndex = random.nextInt(musicList.size());
+            } while (randomIndex == currentIndex && musicList.size() > 1);
+            return randomIndex;
+        } else {
+            // Sequential mode: phát tuần tự
+            return (currentIndex + 1) >= musicList.size() ? 0 : (currentIndex + 1);
+        }
     }
     
     public void removePlayer(Player player) {

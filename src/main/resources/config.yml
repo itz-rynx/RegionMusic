@@ -1,0 +1,18 @@
+# RegionMusic Configuration
+# Cấu hình RegionMusic
+
+# Plugin Version (DO NOT EDIT - Tự động cập nhật)
+# Phiên bản plugin (KHÔNG CHỈNH SỬA - Tự động cập nhật)
+version: '1.9'
+
+# Debug Mode / Chế độ Debug
+# Enable debug logging to console (true/false)
+# Bật log debug ra console (true/false)
+debug: false
+
+# Language / Ngôn ngữ
+# Available languages: vi (Tiếng Việt), en (English), zh (中文)
+# Ngôn ngữ khả dụng: vi (Tiếng Việt), en (English), zh (中文)
+language: vi
+
+

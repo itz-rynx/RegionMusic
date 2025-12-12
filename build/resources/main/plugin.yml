@@ -1,5 +1,5 @@
 name: RegionMusic
-version: '1.7'
+version: '1.8'
 main: org.rynx.regionMusic.RegionMusic
 api-version: '1.21'
 author: rynx

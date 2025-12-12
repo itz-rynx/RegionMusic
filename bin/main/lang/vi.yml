@@ -1,0 +1,30 @@
+messages:
+  # Permission messages
+  no-permission: "&cBạn không có quyền sử dụng lệnh này!"
+  player-only: "&cLệnh này chỉ dành cho người chơi!"
+  
+  # Command usage
+  usage: "&cSử dụng: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  
+  # Reload
+  reload-success: "&aĐã tải lại cấu hình RegionMusic!"
+  
+  # Play music
+  playmusic-success: "&aĐã phát nhạc cho khu vực: {region}"
+  playmusic-no-region: "&cBạn không ở trong khu vực có nhạc!"
+  
+  # Stop music
+  stopmusic-success: "&aĐã dừng nhạc!"
+  
+  # Toggle music
+  toggle-off: "&cĐã tắt nhạc!"
+  toggle-on: "&aĐã bật nhạc!"
+  
+  # Next song
+  nextsong-success: "&aĐã chuyển sang bài nhạc tiếp theo!"
+  nextsong-no-region: "&cBạn không ở trong khu vực có nhạc!"
+  
+  # Now playing
+  now-playing: "&aĐang phát bài: &f{song}"
+
+

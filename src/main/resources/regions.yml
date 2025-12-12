@@ -4,8 +4,10 @@ regions:
     music: # Có thể là một nhạc hoặc danh sách nhạc
       - spawn
       - custommusic
+    playmode: sequential # sequential (theo lượt) hoặc random (ngẫu nhiên), mặc định: sequential
   dungeon1:
     regionname: boss_area
     music: boss # Hoặc có thể là danh sách: [boss, boss2, boss3]
+    playmode: sequential # sequential (theo lượt) hoặc random (ngẫu nhiên), mặc định: sequential
 
 

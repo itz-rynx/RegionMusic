@@ -1,0 +1,8 @@
+# RegionMusic Configuration
+# Cấu hình RegionMusic
+
+# Language / Ngôn ngữ
+# Available languages: vi (Tiếng Việt), en (English), zh (中文)
+# Ngôn ngữ khả dụng: vi (Tiếng Việt), en (English), zh (中文)
+language: vi
+

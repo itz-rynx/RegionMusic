@@ -1,0 +1,30 @@
+messages:
+  # Permission messages
+  no-permission: "&cYou don't have permission to use this command!"
+  player-only: "&cThis command is only for players!"
+  
+  # Command usage
+  usage: "&cUsage: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  
+  # Reload
+  reload-success: "&aRegionMusic configuration reloaded!"
+  
+  # Play music
+  playmusic-success: "&aPlaying music for region: {region}"
+  playmusic-no-region: "&cYou are not in a region with music!"
+  
+  # Stop music
+  stopmusic-success: "&aMusic stopped!"
+  
+  # Toggle music
+  toggle-off: "&cMusic disabled!"
+  toggle-on: "&aMusic enabled!"
+  
+  # Next song
+  nextsong-success: "&aSkipped to next song!"
+  nextsong-no-region: "&cYou are not in a region with music!"
+  
+  # Now playing
+  now-playing: "&aNow playing: &f{song}"
+
+

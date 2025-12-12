@@ -21,6 +21,8 @@ public class RegionConfigManager {
     
     // Map: regionName -> List of musicNames (hỗ trợ nhiều nhạc trong 1 region)
     private final Map<String, List<String>> regionMusicMap = new HashMap<>();
+    // Map: regionName -> playmode (sequential hoặc random)
+    private final Map<String, String> regionPlayModeMap = new HashMap<>();
     // Map: musicName -> sound
     private final Map<String, String> musicSoundMap = new HashMap<>();
     // Map: musicName -> interval
@@ -61,6 +63,7 @@ public class RegionConfigManager {
     
     private void loadRegions() {
         regionMusicMap.clear();
+        regionPlayModeMap.clear();
         if (regionsConfig.contains("regions")) {
             Set<String> regions = regionsConfig.getConfigurationSection("regions").getKeys(false);
             for (String key : regions) {
@@ -81,6 +84,16 @@ public class RegionConfigManager {
                         musicList.add(musicName);
                         regionMusicMap.put(regionName, musicList);
                     }
+                }
+                
+                // Load playmode (sequential hoặc random)
+                if (regionName != null && regionMusicMap.containsKey(regionName)) {
+                    String playMode = regionsConfig.getString("regions." + key + ".playmode", "sequential");
+                    // Chỉ chấp nhận sequential hoặc random
+                    if (!playMode.equalsIgnoreCase("sequential") && !playMode.equalsIgnoreCase("random")) {
+                        playMode = "sequential"; // Mặc định sequential nếu không hợp lệ
+                    }
+                    regionPlayModeMap.put(regionName, playMode.toLowerCase());
                 }
             }
         }
@@ -155,6 +168,47 @@ public class RegionConfigManager {
     
     public float getPitchForMusic(String musicName) {
         return musicPitchMap.getOrDefault(musicName, 1.0f);
+    }
+    
+    public String getPlayModeForRegion(String regionName) {
+        return regionPlayModeMap.getOrDefault(regionName, "sequential");
+    }
+    
+    public boolean isRandomMode(String regionName) {
+        return "random".equalsIgnoreCase(getPlayModeForRegion(regionName));
+    }
+    
+    // Lấy tất cả regions được cấu hình
+    public Map<String, List<String>> getAllRegions() {
+        return new HashMap<String, List<String>>(regionMusicMap);
+    }
+    
+    // Thêm song mới vào musics.yml
+    public boolean addMusic(String musicName, String sound, int interval, String displayName, float volume, float pitch) {
+        try {
+            // Kiểm tra xem music đã tồn tại chưa
+            if (hasMusic(musicName)) {
+                return false; // Đã tồn tại
+            }
+            
+            // Thêm vào config
+            musicsConfig.set("musics." + musicName + ".sound", sound);
+            musicsConfig.set("musics." + musicName + ".interval", interval);
+            musicsConfig.set("musics." + musicName + ".name", displayName != null ? displayName : musicName);
+            musicsConfig.set("musics." + musicName + ".volume", volume);
+            musicsConfig.set("musics." + musicName + ".pitch", pitch);
+            
+            // Lưu file
+            musicsConfig.save(musicsFile);
+            
+            // Reload để cập nhật trong memory
+            loadMusics();
+            
+            return true;
+        } catch (Exception e) {
+            plugin.getLogger().severe("Lỗi khi thêm music: " + e.getMessage());
+            return false;
+        }
     }
 }
 
