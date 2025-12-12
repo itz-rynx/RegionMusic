@@ -11,6 +11,7 @@
 Automatically play music when players enter WorldGuard regions!
 
 RegionMusic is a lightweight Minecraft plugin that automatically plays music/sounds when players enter or leave WorldGuard regions. Perfect for creating immersive experiences with region-specific soundtracks!
+
 **💝 Love this plugin? Consider supporting the development: [Donate via PayPal](https://paypal.me/qbao1702)**
 ## ✨ Features
 
