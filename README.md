@@ -4,7 +4,7 @@
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21+-green.svg)](https://www.minecraft.net/)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Author](https://img.shields.io/badge/author-rynx-purple.svg)](https://github.com/itz-rynx)
-[![](https://dcbadge.limes.pink/api/shield/695998203065008178?style=plastic)](https://discord.com/users/695998203065008178)
+[![Discord](https://dcbadge.limes.pink/api/shield/695998203065008178?style=plastic)](https://discord.com/users/695998203065008178)
 
 
 
