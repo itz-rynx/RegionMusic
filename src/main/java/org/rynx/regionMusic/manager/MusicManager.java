@@ -5,6 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.rynx.regionMusic.RegionMusic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +23,12 @@ public class MusicManager {
     // Track current song index và region cho mỗi player
     private final Map<UUID, Integer> playerCurrentSongIndex = new HashMap<>();
     private final Map<UUID, String> playerCurrentRegion = new HashMap<>();
-    // Track sound đang phát để có thể dừng khi skip
+    // Track sound đang phát để có thể dừng khi skip (chỉ cho music, không ảnh hưởng ambience)
     private final Map<UUID, String> playerCurrentSound = new HashMap<>();
+    // Track ambience tasks và sounds (riêng biệt với music)
+    // Map: playerId -> List of ambience tasks (hỗ trợ nhiều ambience cùng lúc)
+    private final Map<UUID, List<BukkitTask>> playerAmbienceTasks = new HashMap<>();
+    private final Map<UUID, List<String>> playerCurrentAmbienceSounds = new HashMap<>();
     
     public MusicManager(RegionMusic plugin, RegionConfigManager configManager, MusicToggleManager toggleManager) {
         this.plugin = plugin;
@@ -94,6 +99,9 @@ public class MusicManager {
                 
                 // Bắt đầu phát playlist (chỉ phát một bài tại một thời điểm)
                 playNextSong(player, regionName, musicList, 0);
+                
+                // Phát ambience nếu có (phát cùng lúc với music)
+                playAmbienceForPlayer(player, regionName);
             }
         }.runTaskLater(plugin, 2L); // Delay 2 ticks để đảm bảo task cũ đã được hủy
     }
@@ -200,11 +208,14 @@ public class MusicManager {
             task.cancel();
         }
         
-        // Dừng sound đang phát
+        // Dừng music sound đang phát
         String currentSound = playerCurrentSound.remove(uuid);
         if (currentSound != null) {
             stopSound(player, currentSound);
         }
+        
+        // Dừng ambience
+        stopAmbienceForPlayer(player);
         
         playerCurrentSongIndex.remove(uuid);
         playerCurrentRegion.remove(uuid);
@@ -214,7 +225,7 @@ public class MusicManager {
         UUID playerId = player.getUniqueId();
         org.bukkit.Location location = player.getLocation();
         
-        // Dừng sound cũ đang phát trước (nếu có)
+        // Dừng sound cũ đang phát trước (nếu có) - CHỈ dừng music sound, không dừng ambience
         String oldSound = playerCurrentSound.get(playerId);
         if (oldSound != null) {
             stopSound(player, oldSound);
@@ -357,6 +368,154 @@ public class MusicManager {
         stopMusicForPlayer(player);
         // Đảm bảo cleanup hoàn toàn
         playerCurrentSound.remove(uuid);
+        playerCurrentAmbienceSounds.remove(uuid);
+    }
+    
+    /**
+     * Phát ambience cho player trong region (phát liên tục, loop)
+     * Ambience phát cùng lúc với music, không bị ảnh hưởng khi music thay đổi
+     */
+    private void playAmbienceForPlayer(Player player, String regionName) {
+        if (toggleManager.isMusicToggledOff(player)) {
+            return;
+        }
+        
+        List<String> ambienceList = configManager.getAmbienceListForRegion(regionName);
+        if (ambienceList == null || ambienceList.isEmpty()) {
+            return; // Không có ambience cho region này
+        }
+        
+        UUID playerId = player.getUniqueId();
+        
+        // Dừng ambience cũ nếu có (khi chuyển region)
+        stopAmbienceForPlayer(player);
+        
+        // Lưu danh sách ambience sounds đang phát
+        List<String> currentAmbienceSounds = new ArrayList<>();
+        playerCurrentAmbienceSounds.put(playerId, currentAmbienceSounds);
+        
+        // Lưu danh sách ambience tasks
+        List<BukkitTask> ambienceTasks = new ArrayList<>();
+        playerAmbienceTasks.put(playerId, ambienceTasks);
+        
+        // Phát tất cả ambience sounds trong danh sách
+        for (String ambienceName : ambienceList) {
+            String soundName = configManager.getSoundForMusic(ambienceName);
+            if (soundName == null) {
+                continue; // Bỏ qua nếu không tìm thấy sound
+            }
+            
+            float volume = configManager.getVolumeForMusic(ambienceName);
+            float pitch = configManager.getPitchForMusic(ambienceName);
+            int interval = configManager.getIntervalForMusic(ambienceName);
+            
+            // Phát ambience sound lần đầu
+            playAmbienceSound(player, soundName, volume, pitch);
+            currentAmbienceSounds.add(soundName);
+            
+            // Tạo task để loop ambience (phát lại sau khi kết thúc)
+            final String finalSoundName = soundName;
+            final float finalVolume = volume;
+            final float finalPitch = pitch;
+            final int finalInterval = interval;
+            
+            BukkitTask ambienceTask = createAmbienceLoopTask(player, regionName, finalSoundName, finalVolume, finalPitch, finalInterval);
+            ambienceTasks.add(ambienceTask);
+        }
+    }
+    
+    /**
+     * Phát ambience sound (không dừng sound cũ, cho phép nhiều ambience cùng lúc)
+     */
+    private void playAmbienceSound(Player player, String soundName, float volume, float pitch) {
+        if (!player.isOnline()) {
+            return;
+        }
+        
+        org.bukkit.Location location = player.getLocation();
+        
+        try {
+            // Try as-is first (supports both vanilla and custom sounds)
+            player.playSound(location, soundName, volume, pitch);
+        } catch (Exception e) {
+            // If direct string fails, try with minecraft: namespace prefix
+            try {
+                String formattedSound = soundName.contains(":") ? soundName : "minecraft:" + soundName.toLowerCase().replace("_", ".");
+                player.playSound(location, formattedSound, volume, pitch);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Không thể phát ambience sound: " + soundName + " - " + ex.getMessage());
+                return;
+            }
+        }
+    }
+    
+    /**
+     * Tạo task để loop ambience (phát lại sau mỗi interval)
+     */
+    private BukkitTask createAmbienceLoopTask(Player player, String regionName, String soundName, float volume, float pitch, int interval) {
+        UUID playerId = player.getUniqueId();
+        
+        BukkitTask task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Kiểm tra lại xem player còn online và vẫn ở trong region
+                if (!player.isOnline() || toggleManager.isMusicToggledOff(player)) {
+                    stopAmbienceForPlayer(player);
+                    return;
+                }
+                
+                String checkRegion = org.rynx.regionMusic.util.WorldGuardUtils.getPlayerRegion(player);
+                if (checkRegion == null || !checkRegion.equalsIgnoreCase(regionName)) {
+                    stopAmbienceForPlayer(player);
+                    return;
+                }
+                
+                // Kiểm tra xem ambience vẫn còn trong danh sách không
+                if (!playerCurrentAmbienceSounds.containsKey(playerId) || 
+                    !playerCurrentAmbienceSounds.get(playerId).contains(soundName)) {
+                    return; // Ambience đã bị dừng
+                }
+                
+                // Phát lại ambience (loop)
+                playAmbienceSound(player, soundName, volume, pitch);
+                
+                // Lên lịch phát lại (tạo task mới để loop)
+                BukkitTask newTask = createAmbienceLoopTask(player, regionName, soundName, volume, pitch, interval);
+                
+                // Thêm task mới vào list (task cũ sẽ tự động bị hủy khi kết thúc)
+                List<BukkitTask> tasks = playerAmbienceTasks.get(playerId);
+                if (tasks != null) {
+                    tasks.add(newTask);
+                }
+            }
+        }.runTaskLater(plugin, interval * 20L);
+        
+        return task;
+    }
+    
+    /**
+     * Dừng tất cả ambience cho player
+     */
+    private void stopAmbienceForPlayer(Player player) {
+        UUID uuid = player.getUniqueId();
+        
+        // Dừng tất cả ambience tasks
+        List<BukkitTask> ambienceTasks = playerAmbienceTasks.remove(uuid);
+        if (ambienceTasks != null) {
+            for (BukkitTask task : ambienceTasks) {
+                if (task != null && !task.isCancelled()) {
+                    task.cancel();
+                }
+            }
+        }
+        
+        // Dừng tất cả ambience sounds
+        List<String> ambienceSounds = playerCurrentAmbienceSounds.remove(uuid);
+        if (ambienceSounds != null) {
+            for (String soundName : ambienceSounds) {
+                stopSound(player, soundName);
+            }
+        }
     }
     
     /**

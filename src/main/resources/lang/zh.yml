@@ -4,7 +4,7 @@ messages:
   player-only: "&c此命令仅适用于玩家！"
   
   # Command usage
-  usage: "&c用法: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  usage: "&c用法: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about|gui|songs|addmusic|editmusic>"
   
   # Reload
   reload-success: "&a已重新加载 RegionMusic 配置！"
@@ -26,5 +26,10 @@ messages:
   
   # Now playing
   now-playing: "&a正在播放: &f{song}"
+
+
+
+
+
 
 

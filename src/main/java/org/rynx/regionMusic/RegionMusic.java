@@ -53,7 +53,7 @@ public final class RegionMusic extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
             new PlayerQuitListener(this, musicManager, toggleManager), this);
         getServer().getPluginManager().registerEvents(chatListener, this);
-        getServer().getPluginManager().registerEvents(new GUIListener(), this);
+        getServer().getPluginManager().registerEvents(new GUIListener(this, configManager), this);
         
         // Register commands
         getCommand("regionmusic").setExecutor(

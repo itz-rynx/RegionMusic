@@ -5,9 +5,12 @@ regions:
       - spawn
       - custommusic
     playmode: sequential # sequential (theo lượt) hoặc random (ngẫu nhiên), mặc định: sequential
+    # ambience: # (Tùy chọn) Âm thanh nền phát liên tục cùng với music. Có thể là một ambience hoặc danh sách
+    #   - forest_ambience
   dungeon1:
     regionname: boss_area
     music: boss # Hoặc có thể là danh sách: [boss, boss2, boss3]
     playmode: sequential # sequential (theo lượt) hoặc random (ngẫu nhiên), mặc định: sequential
+    # ambience: dungeon_ambience # (Tùy chọn) Âm thanh nền phát liên tục cùng với music
 
 

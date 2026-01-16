@@ -21,6 +21,8 @@ public class RegionConfigManager {
     
     // Map: regionName -> List of musicNames (hỗ trợ nhiều nhạc trong 1 region)
     private final Map<String, List<String>> regionMusicMap = new HashMap<>();
+    // Map: regionName -> List of ambienceNames (hỗ trợ nhiều ambience trong 1 region)
+    private final Map<String, List<String>> regionAmbienceMap = new HashMap<>();
     // Map: regionName -> playmode (sequential hoặc random)
     private final Map<String, String> regionPlayModeMap = new HashMap<>();
     // Map: musicName -> sound
@@ -63,6 +65,7 @@ public class RegionConfigManager {
     
     private void loadRegions() {
         regionMusicMap.clear();
+        regionAmbienceMap.clear();
         regionPlayModeMap.clear();
         if (regionsConfig.contains("regions")) {
             Set<String> regions = regionsConfig.getConfigurationSection("regions").getKeys(false);
@@ -83,6 +86,25 @@ public class RegionConfigManager {
                         List<String> musicList = new ArrayList<>();
                         musicList.add(musicName);
                         regionMusicMap.put(regionName, musicList);
+                    }
+                }
+                
+                // Load ambience (tùy chọn) - hỗ trợ cả single ambience và list of ambiences
+                if (regionsConfig.contains("regions." + key + ".ambience")) {
+                    if (regionsConfig.isList("regions." + key + ".ambience")) {
+                        // Nhiều ambience trong 1 region
+                        List<String> ambienceList = regionsConfig.getStringList("regions." + key + ".ambience");
+                        if (regionName != null && !ambienceList.isEmpty()) {
+                            regionAmbienceMap.put(regionName, new ArrayList<>(ambienceList));
+                        }
+                    } else {
+                        // Single ambience
+                        String ambienceName = regionsConfig.getString("regions." + key + ".ambience");
+                        if (regionName != null && ambienceName != null) {
+                            List<String> ambienceList = new ArrayList<>();
+                            ambienceList.add(ambienceName);
+                            regionAmbienceMap.put(regionName, ambienceList);
+                        }
                     }
                 }
                 
@@ -134,6 +156,16 @@ public class RegionConfigManager {
     // Lấy danh sách nhạc cho region (hỗ trợ nhiều nhạc)
     public List<String> getMusicListForRegion(String regionName) {
         return regionMusicMap.getOrDefault(regionName, new ArrayList<>());
+    }
+    
+    // Lấy danh sách ambience cho region (hỗ trợ nhiều ambience)
+    public List<String> getAmbienceListForRegion(String regionName) {
+        return regionAmbienceMap.getOrDefault(regionName, new ArrayList<>());
+    }
+    
+    // Kiểm tra xem region có ambience không
+    public boolean hasAmbience(String regionName) {
+        return regionAmbienceMap.containsKey(regionName) && !regionAmbienceMap.get(regionName).isEmpty();
     }
     
     // Backward compatible: lấy nhạc đầu tiên
@@ -190,25 +222,118 @@ public class RegionConfigManager {
             if (hasMusic(musicName)) {
                 return false; // Đã tồn tại
             }
-            
+
             // Thêm vào config
             musicsConfig.set("musics." + musicName + ".sound", sound);
             musicsConfig.set("musics." + musicName + ".interval", interval);
             musicsConfig.set("musics." + musicName + ".name", displayName != null ? displayName : musicName);
             musicsConfig.set("musics." + musicName + ".volume", volume);
             musicsConfig.set("musics." + musicName + ".pitch", pitch);
-            
+
             // Lưu file
             musicsConfig.save(musicsFile);
-            
+
             // Reload để cập nhật trong memory
             loadMusics();
-            
+
             return true;
         } catch (Exception e) {
             plugin.getLogger().severe("Lỗi khi thêm music: " + e.getMessage());
             return false;
         }
+    }
+
+    // Chỉnh sửa song trong musics.yml
+    public boolean editMusic(String musicName, String sound, int interval, String displayName, float volume, float pitch) {
+        try {
+            // Kiểm tra xem music có tồn tại không
+            if (!hasMusic(musicName)) {
+                return false; // Không tồn tại
+            }
+
+            // Cập nhật config
+            musicsConfig.set("musics." + musicName + ".sound", sound);
+            musicsConfig.set("musics." + musicName + ".interval", interval);
+            musicsConfig.set("musics." + musicName + ".name", displayName != null ? displayName : musicName);
+            musicsConfig.set("musics." + musicName + ".volume", volume);
+            musicsConfig.set("musics." + musicName + ".pitch", pitch);
+
+            // Lưu file
+            musicsConfig.save(musicsFile);
+
+            // Reload để cập nhật trong memory
+            loadMusics();
+
+            return true;
+        } catch (Exception e) {
+            plugin.getLogger().severe("Lỗi khi chỉnh sửa music: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Xóa song khỏi musics.yml
+    public boolean deleteMusic(String musicName) {
+        try {
+            // Kiểm tra xem music có tồn tại không
+            if (!hasMusic(musicName)) {
+                return false; // Không tồn tại
+            }
+
+            // Kiểm tra xem music có đang được sử dụng trong regions không
+            if (isMusicUsedInRegions(musicName)) {
+                return false; // Đang được sử dụng, không thể xóa
+            }
+
+            // Xóa khỏi config
+            musicsConfig.set("musics." + musicName, null);
+
+            // Lưu file
+            musicsConfig.save(musicsFile);
+
+            // Reload để cập nhật trong memory
+            loadMusics();
+
+            return true;
+        } catch (Exception e) {
+            plugin.getLogger().severe("Lỗi khi xóa music: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Kiểm tra xem music có đang được sử dụng trong regions không
+    public boolean isMusicUsedInRegions(String musicName) {
+        for (List<String> musicList : regionMusicMap.values()) {
+            if (musicList.contains(musicName)) {
+                return true;
+            }
+        }
+        for (List<String> ambienceList : regionAmbienceMap.values()) {
+            if (ambienceList.contains(musicName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Lấy tất cả music names (để hiển thị trong GUI)
+    public java.util.Set<String> getAllMusicNames() {
+        return new java.util.HashSet<>(musicSoundMap.keySet());
+    }
+
+    // Lấy thông tin đầy đủ của một music (để chỉnh sửa)
+    public java.util.Map<String, Object> getMusicInfo(String musicName) {
+        java.util.Map<String, Object> info = new java.util.HashMap<>();
+        if (!hasMusic(musicName)) {
+            return info;
+        }
+
+        info.put("sound", musicSoundMap.get(musicName));
+        info.put("interval", musicIntervalMap.get(musicName));
+        info.put("displayName", musicDisplayNameMap.get(musicName));
+        info.put("volume", musicVolumeMap.get(musicName));
+        info.put("pitch", musicPitchMap.get(musicName));
+
+        return info;
     }
 }
 

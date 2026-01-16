@@ -4,7 +4,7 @@ messages:
   player-only: "&cLệnh này chỉ dành cho người chơi!"
   
   # Command usage
-  usage: "&cSử dụng: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  usage: "&cSử dụng: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about|gui|songs|addmusic|editmusic>"
   
   # Reload
   reload-success: "&aĐã tải lại cấu hình RegionMusic!"
@@ -26,5 +26,10 @@ messages:
   
   # Now playing
   now-playing: "&aĐang phát bài: &f{song}"
+
+
+
+
+
 
 

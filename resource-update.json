@@ -1,0 +1,19 @@
+{
+  "version": "2.0",
+  "changelog": "Major update with Song Management GUI, edit/delete songs, multi-page interface, and enhanced safety features.",
+  "download_url": "https://www.spigotmc.org/resources/regionmusic.123456/download?version=latest",
+  "release_date": "2026-01-16",
+  "features": [
+    "Song Management GUI (/regionmusic songs)",
+    "Edit existing songs (/regionmusic editmusic)",
+    "Delete songs with safety checks",
+    "Multi-page GUI navigation",
+    "Enhanced UI design",
+    "Improved error handling"
+  ],
+  "requirements": {
+    "minecraft": "1.21+",
+    "java": "21+",
+    "dependencies": ["WorldGuard"]
+  }
+}

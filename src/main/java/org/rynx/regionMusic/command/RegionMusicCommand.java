@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.rynx.regionMusic.RegionMusic;
 import org.rynx.regionMusic.gui.RegionMusicGUI;
+import org.rynx.regionMusic.gui.SongManagementGUI;
 import org.rynx.regionMusic.listener.ChatListener;
 import org.rynx.regionMusic.manager.MusicManager;
 import org.rynx.regionMusic.manager.RegionConfigManager;
@@ -17,13 +18,15 @@ public class RegionMusicCommand implements CommandExecutor {
     private final MusicManager musicManager;
     private final RegionConfigManager configManager;
     private final RegionMusicGUI gui;
+    private final SongManagementGUI songGUI;
     private final ChatListener chatListener;
-    
+
     public RegionMusicCommand(RegionMusic plugin, MusicManager musicManager, RegionConfigManager configManager, ChatListener chatListener) {
         this.plugin = plugin;
         this.musicManager = musicManager;
         this.configManager = configManager;
         this.gui = new RegionMusicGUI(configManager);
+        this.songGUI = new SongManagementGUI(configManager);
         this.chatListener = chatListener;
     }
     
@@ -168,6 +171,19 @@ public class RegionMusicCommand implements CommandExecutor {
                 Player playerGUI = (Player) sender;
                 gui.openGUI(playerGUI);
                 break;
+
+            case "songs":
+                if (!sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgManager.getMessage("player-only"));
+                    return true;
+                }
+                Player playerSongs = (Player) sender;
+                songGUI.openGUI(playerSongs);
+                break;
                 
             case "addmusic":
                 if (!sender.hasPermission("regionmusic.admin")) {
@@ -189,6 +205,94 @@ public class RegionMusicCommand implements CommandExecutor {
                     return true;
                 }
                 chatListener.startAddingMusic(playerAdd, musicName);
+                break;
+
+            case "editmusic":
+                if (!sender.hasPermission("regionmusic.admin")) {
+                    sender.sendMessage(msgManager.getMessage("no-permission"));
+                    return true;
+                }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgManager.getMessage("player-only"));
+                    return true;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage("§cUsage: /regionmusic editmusic <tên_bài_hát> <sound|interval|name|volume|pitch>");
+                    sender.sendMessage("§7Ví dụ: /regionmusic editmusic spawn MUSIC_DISC_CAT|185|New Name|1.0|1.0");
+                    return true;
+                }
+                Player playerEdit = (Player) sender;
+                String editMusicName = args[1];
+                String editParams = args[2];
+
+                if (!configManager.hasMusic(editMusicName)) {
+                    sender.sendMessage("§c§l✗ Bài hát §e" + editMusicName + " §ckhông tồn tại!");
+                    return true;
+                }
+
+                // Parse edit parameters
+                String[] parts = editParams.split("\\|");
+                String sound = parts.length > 0 ? parts[0].trim() : null;
+                int interval = 185;
+                String displayName = editMusicName;
+                float volume = 1.0f;
+                float pitch = 1.0f;
+
+                if (parts.length > 1) {
+                    try {
+                        interval = Integer.parseInt(parts[1].trim());
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("§cLỗi: Interval phải là số!");
+                        return true;
+                    }
+                }
+                if (parts.length > 2) {
+                    displayName = parts[2].trim();
+                }
+                if (parts.length > 3) {
+                    try {
+                        volume = Float.parseFloat(parts[3].trim());
+                        volume = Math.max(0.0f, Math.min(1.0f, volume));
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("§cLỗi: Volume phải là số!");
+                        return true;
+                    }
+                }
+                if (parts.length > 4) {
+                    try {
+                        pitch = Float.parseFloat(parts[4].trim());
+                        pitch = Math.max(0.5f, Math.min(2.0f, pitch));
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("§cLỗi: Pitch phải là số!");
+                        return true;
+                    }
+                }
+
+                // Get current values if not provided
+                var currentInfo = configManager.getMusicInfo(editMusicName);
+                if (sound == null || sound.isEmpty()) {
+                    sound = (String) currentInfo.get("sound");
+                }
+                if (parts.length <= 1) {
+                    interval = (Integer) currentInfo.get("interval");
+                }
+                if (parts.length <= 2) {
+                    displayName = (String) currentInfo.get("displayName");
+                }
+                if (parts.length <= 3) {
+                    volume = (Float) currentInfo.get("volume");
+                }
+                if (parts.length <= 4) {
+                    pitch = (Float) currentInfo.get("pitch");
+                }
+
+                boolean success = configManager.editMusic(editMusicName, sound, interval, displayName, volume, pitch);
+                if (success) {
+                    plugin.getCustomLogger().info("§aĐã chỉnh sửa bài hát: §e" + editMusicName + " §7(bởi " + playerEdit.getName() + ")");
+                    sender.sendMessage("§a§l✓ Đã chỉnh sửa bài hát: §e" + displayName);
+                } else {
+                    sender.sendMessage("§c§l✗ Lỗi: Không thể chỉnh sửa bài hát §e" + editMusicName);
+                }
                 break;
                 
             default:

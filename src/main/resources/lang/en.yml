@@ -4,7 +4,7 @@ messages:
   player-only: "&cThis command is only for players!"
   
   # Command usage
-  usage: "&cUsage: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  usage: "&cUsage: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about|gui|songs|addmusic|editmusic>"
   
   # Reload
   reload-success: "&aRegionMusic configuration reloaded!"
@@ -26,5 +26,10 @@ messages:
   
   # Now playing
   now-playing: "&aNow playing: &f{song}"
+
+
+
+
+
 
 

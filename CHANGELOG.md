@@ -4,6 +4,48 @@ All notable changes to RegionMusic will be documented in this file.
 
 ---
 
+## [2.0]
+
+### Added
+- 🎵 **Song Management GUI**: Complete graphical interface for managing songs (add/edit/delete)
+  - Command: `/regionmusic songs` or `/rm songs`
+  - Multi-page navigation for large song lists
+  - Visual song information display with all properties
+  - Safety checks to prevent deletion of songs in use
+- ✏️ **Edit Songs**: Edit existing songs with new properties via command
+  - Command: `/regionmusic editmusic <name> <sound|interval|name|volume|pitch>`
+  - Partial editing support (only specify changed parameters)
+  - Real-time validation and error handling
+- 🗑️ **Delete Songs**: Safely delete unused songs with confirmation dialog
+  - Prevents accidental deletion with confirmation GUI
+  - Checks if songs are currently used in regions before allowing deletion
+  - Provides clear feedback and logging
+- 🎨 **Enhanced UI**: Modern and intuitive user interface design
+  - Color-coded information and status indicators
+  - Clear navigation and action buttons
+  - Contextual tooltips and help text
+- 🔒 **Safety Features**: Comprehensive safety checks and validation
+  - Prevents deletion of songs currently used in regions
+  - Input validation for all song parameters
+  - Confirmation dialogs for destructive actions
+
+### Changed
+- 📝 **Plugin.yml**: Updated version to 2.0 and added new commands to usage
+- 📝 **Messages**: Updated command usage messages in all language files
+- 🔧 **GUI System**: Completely rewritten GUI listener to handle multiple GUI types
+- 📦 **Code Structure**: Improved code organization and maintainability
+
+### Technical
+- 🔨 **Code**: Created `SongManagementGUI` class for comprehensive song management
+- 🔨 **Code**: Added `editMusic()` and `deleteMusic()` methods in `RegionConfigManager`
+- 🔨 **Code**: Added `isMusicUsedInRegions()` method to check song usage
+- 🔨 **Code**: Added `getAllMusicNames()` and `getMusicInfo()` methods for GUI data
+- 🔨 **Code**: Updated `GUIListener` to handle song management, edit, and delete GUIs
+- 🔨 **Code**: Updated `RegionMusicCommand` to support `songs` and `editmusic` commands
+- 🔨 **Code**: Added SpigotMC update files and resource metadata
+
+---
+
 ## [1.9]
 
 ### Added

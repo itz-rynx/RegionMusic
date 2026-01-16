@@ -1,21 +1,28 @@
 # RegionMusic
 
-[![GitHub](https://img.shields.io/badge/GitHub-itz--rynx-blue?logo=github)](https://github.com/itz-rynx)
-[![Discord](https://img.shields.io/badge/Discord-_q.bao1702-5865F2?logo=discord)](https://discord.com/users/695998203065008178)
-[![Version](https://img.shields.io/badge/Version-v1.9-green)](https://github.com/itz-rynx)
-[![Paper](https://img.shields.io/badge/Paper-1.21+-blue)](https://papermc.io/)
-[![Java](https://img.shields.io/badge/Java-21-orange?logo=java)](https://www.oracle.com/java/)
+[![Version](https://img.shields.io/badge/version-2.0-blue.svg)](https://github.com/rynx/RegionMusic)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.5-green.svg)](https://www.minecraft.net/)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
+[![Author](https://img.shields.io/badge/author-rynx-purple.svg)](https://github.com/rynx)
 
-**🎵 Music that follows you, wherever you go! 🎵**
+**🎵 Every region tells a story with music 🎵**
 
 Automatically play music when players enter WorldGuard regions!
 
 RegionMusic is a lightweight Minecraft plugin that automatically plays music/sounds when players enter or leave WorldGuard regions. Perfect for creating immersive experiences with region-specific soundtracks!
 
 **💝 Love this plugin? Consider supporting the development: [Donate via PayPal](https://paypal.me/qbao1702)**
+
 ## ✨ Features
 
+- 🎵 **Song Management GUI** - Complete graphical interface for managing songs (add/edit/delete) (`/regionmusic songs`)
+- ✏️ **Edit Songs** - Edit existing songs with new properties (`/regionmusic editmusic`)
+- 🗑️ **Delete Songs** - Safely delete unused songs with confirmation dialog
+- 📄 **Multi-page GUI** - Paginated song list for better navigation
+- 🔒 **Safety Checks** - Prevent deletion of songs currently used in regions
+- 🎨 **Enhanced UI** - Modern and intuitive user interface design
 - 🎵 **Automatic Music Playback** - Plays music/sounds when players enter or leave WorldGuard regions
+- 🎧 **Multiple Tracks Support** - Play music and ambience simultaneously for immersive experiences
 - 🔁 **Multiple Songs Support** - Configure multiple songs per region that play sequentially or randomly
 - 🔂 **Auto Loop** - Automatically loops back to the first song after the playlist ends
 - 🎲 **Play Mode** - Choose playback mode: sequential (in order) or random (shuffle)
@@ -65,10 +72,14 @@ regions:
       - spawn
       - custommusic
     playmode: sequential  # sequential (in order) or random (shuffle), default: sequential
+    ambience: forest_ambience  # (Optional) Background ambience that plays continuously with music
   dungeon1:
     regionname: boss_area
     music: boss        # Or: [boss, boss2, boss3]
     playmode: random   # Random playback
+    ambience:          # (Optional) Multiple ambience tracks can play simultaneously
+      - dungeon_ambience
+      - cave_echoes
 ```
 
 ### musics.yml
@@ -107,7 +118,7 @@ Configure plugin settings:
 
 ```yaml
 # Plugin Version (DO NOT EDIT - Auto-updated)
-version: '1.9'
+version: '2.0'
 
 # Debug Mode
 # Enable debug logging to console (true/false)
@@ -141,7 +152,9 @@ All messages can be customized by editing language files in `lang/` folder.
 | `/regionmusic nextsong` | Skip to next song in playlist | `regionmusic.nextsong` or `regionmusic.admin` |
 | `/regionmusic about` | Show plugin information | `regionmusic.about` or `regionmusic.admin` |
 | `/regionmusic gui` | Open GUI to view regions and songs | `regionmusic.admin` |
+| `/regionmusic songs` | Open song management GUI (add/edit/delete) | `regionmusic.admin` |
 | `/regionmusic addmusic <name>` | Add new song via chat interface | `regionmusic.admin` |
+| `/regionmusic editmusic <name> <params>` | Edit existing song properties | `regionmusic.admin` |
 | `/rm` | Alias for `/regionmusic` | Same as `/regionmusic` |
 | `/togglemusic` | Toggle music on/off (for all players) | None |
 | `/cancel` | Cancel adding music process | None |
@@ -223,12 +236,49 @@ musics:
     pitch: 1.0
 ```
 
+### Example 4: Music + Ambience (Multiple Tracks Simultaneously)
+
+```yaml
+# regions.yml
+regions:
+  forest:
+    regionname: forest_area
+    music:
+      - forest_theme_1
+      - forest_theme_2
+    playmode: sequential
+    ambience: forest_ambience  # Plays continuously with music
+
+# musics.yml
+musics:
+  forest_theme_1:
+    sound: MUSIC_DISC_CAT
+    interval: 185
+    name: "Forest Theme 1"
+    volume: 1.0
+    pitch: 1.0
+  forest_theme_2:
+    sound: MUSIC_DISC_CHIRP
+    interval: 197
+    name: "Forest Theme 2"
+    volume: 1.0
+    pitch: 1.0
+  forest_ambience:  # Ambience track (plays continuously, loops automatically)
+    sound: AMBIENT_CAVE
+    interval: 60  # Loop every 60 seconds
+    name: "Forest Ambience"
+    volume: 0.5  # Lower volume for background ambience
+    pitch: 1.0
+```
+
 ## Notes
 
 - Music is **enabled by default** for all players
 - Players can toggle music on/off with `/togglemusic` - toggle state is **saved and persists** across server restarts
 - Music automatically stops when players leave the region
+- **Ambience tracks** can play simultaneously with music for immersive experiences
 - Multiple songs can play sequentially (default) or randomly based on `playmode` setting
+- Ambience tracks loop continuously while music plays in the background
 - Use `/regionmusic reload` after editing config files
 - "Now playing" notifications are shown when a song starts or when skipping
 - Custom song names can be set in `musics.yml` with the `name` field
@@ -237,7 +287,9 @@ musics:
 - Language can be changed in `config.yml` - supports Vietnamese (vi), English (en), and Chinese (zh)
 - All messages can be customized by editing language files in `lang/` folder
 - Use `/regionmusic gui` to view all regions and songs visually
+- Use `/regionmusic songs` to manage songs with full GUI (add/edit/delete)
 - Add new songs via `/regionmusic addmusic <name>` and chat interface
+- Edit existing songs via `/regionmusic editmusic <name> <params>`
 - Debug mode can be enabled in `config.yml` for detailed console logging
 - Logger displays with beautiful RYNX prefix for better visibility
 
@@ -258,6 +310,8 @@ This project is licensed under the MIT License.
 **rynx**
 
 - GitHub: [@rynx](https://github.com/itz-rynx)
-- Discord: [q.bao1702](https://discord.com/users/695998203065008178)
+- Discord: q.bao1702
 
 ---
+
+Made with ❤️ for the Minecraft community

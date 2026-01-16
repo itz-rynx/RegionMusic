@@ -1,5 +1,5 @@
 name: RegionMusic
-version: '1.9'
+version: '2.0'
 main: org.rynx.regionMusic.RegionMusic
 api-version: '1.21'
 author: rynx
@@ -7,7 +7,7 @@ depend: [WorldGuard]
 commands:
   regionmusic:
     description: Lệnh quản trị RegionMusic
-    usage: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about|gui|addmusic>
+    usage: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about|gui|songs|addmusic|editmusic>
     aliases: [rm]
   togglemusic:
     description: Bật/tắt nhạc
