@@ -106,7 +106,44 @@ public class MessageManager {
         if (message == null) {
             return "§cMessage not found: " + key;
         }
-        return message.replace("&", "§");
+        return colorize(message);
+    }
+    
+    /**
+     * Chuyển mã màu trong chuỗi. Hỗ trợ cả 3 dạng:
+     * <ul>
+     *   <li>&amp;#RRGGBB → hex (VD: &#FFFFFF)</li>
+     *   <li>&amp;X → §X (VD: &amp;a, &amp;f)</li>
+     *   <li>§X → giữ nguyên (VD: §f, §a)</li>
+     * </ul>
+     */
+    public static String colorize(String text) {
+        if (text == null || text.isEmpty()) return text;
+        // &#RRGGBB → §x§R§R§G§G§B§B (Minecraft 1.16+ hex)
+        StringBuilder out = new StringBuilder(text.length() * 2);
+        int i = 0;
+        while (i < text.length()) {
+            if (text.charAt(i) == '&' && i + 7 <= text.length() && text.charAt(i + 1) == '#') {
+                String hex = text.substring(i + 2, i + 8);
+                if (hex.matches("[0-9A-Fa-f]{6}")) {
+                    out.append("§x");
+                    for (int j = 0; j < 6; j++) {
+                        out.append("§").append(hex.charAt(j));
+                    }
+                    i += 8;
+                    continue;
+                }
+            }
+            if (text.charAt(i) == '&' && i + 1 < text.length()) {
+                out.append('§').append(text.charAt(i + 1));
+                i += 2;
+                continue;
+            }
+            // § hoặc ký tự thường: giữ nguyên
+            out.append(text.charAt(i));
+            i++;
+        }
+        return out.toString();
     }
     
     public String getMessage(String key, String... replacements) {
@@ -116,7 +153,7 @@ public class MessageManager {
                 message = message.replace(replacements[i], replacements[i + 1]);
             }
         }
-        return message;
+        return colorize(message);
     }
     
     public String getCurrentLanguage() {

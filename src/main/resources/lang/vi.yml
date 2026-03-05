@@ -1,4 +1,5 @@
 messages:
+  # Màu: &#RRGGBB (hex) | &a &f (ampersand) | §a §f (section sign) – cả 3 đều dùng được
   # Permission messages
   no-permission: "&cBạn không có quyền sử dụng lệnh này!"
   player-only: "&cLệnh này chỉ dành cho người chơi!"
@@ -24,8 +25,8 @@ messages:
   nextsong-success: "&aĐã chuyển sang bài nhạc tiếp theo!"
   nextsong-no-region: "&cBạn không ở trong khu vực có nhạc!"
   
-  # Now playing
-  now-playing: "&aĐang phát bài: &f{song}"
+  # Now playing – placeholders: {song}, {duration} (M:SS), {duration_seconds}
+  now-playing: "&aĐang phát: &f{song} &7({duration})"
 
 
 

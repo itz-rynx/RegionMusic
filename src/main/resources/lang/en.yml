@@ -1,4 +1,5 @@
 messages:
+  # Colors: &#RRGGBB (hex) | &a &f (ampersand) | §a §f (section sign) – all 3 work
   # Permission messages
   no-permission: "&cYou don't have permission to use this command!"
   player-only: "&cThis command is only for players!"
@@ -24,8 +25,8 @@ messages:
   nextsong-success: "&aSkipped to next song!"
   nextsong-no-region: "&cYou are not in a region with music!"
   
-  # Now playing
-  now-playing: "&aNow playing: &f{song}"
+  # Now playing – placeholders: {song}, {duration} (M:SS), {duration_seconds}
+  now-playing: "&aNow playing: &f{song} &7({duration})"
 
 
 

@@ -4,6 +4,28 @@ All notable changes to RegionMusic will be documented in this file.
 
 ---
 
+## [2.1]
+
+### Added
+- 🌈 **Hex & multi-format colors** in lang messages
+  - `&#RRGGBB` (hex, e.g. `&#FFFFFF`) converted to Minecraft hex format
+  - `&X` (e.g. `&a`, `&f`) converted to `§X`
+  - `§X` left unchanged so all three formats can be used together
+- 📝 **Now-playing placeholders**: `{song}`, `{duration}` (M:SS), `{duration_seconds}`
+  - `{song}`: display name from musics.yml
+  - `{duration}`: length as M:SS (from interval)
+  - `{duration_seconds}`: length in seconds
+
+### Changed
+- 📝 **MessageManager**: Added `colorize(String)` with hex and `&`/`§` support; both `getMessage` methods use it
+- 📝 **Lang files**: Default now-playing message includes `{duration}`; comments document color and placeholder usage
+- 🔧 **MusicManager**: Passes duration placeholders when sending now-playing; added `formatDuration(int)` for M:SS
+
+### Technical
+- 🔨 **Code**: `MessageManager.colorize()` handles `&#RRGGBB` and `&X`, preserves `§`
+
+---
+
 ## [2.0]
 
 ### Added

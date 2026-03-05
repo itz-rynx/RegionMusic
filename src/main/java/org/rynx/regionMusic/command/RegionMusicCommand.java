@@ -294,7 +294,7 @@ public class RegionMusicCommand implements CommandExecutor {
                     sender.sendMessage("§c§l✗ Lỗi: Không thể chỉnh sửa bài hát §e" + editMusicName);
                 }
                 break;
-                
+
             default:
                 sender.sendMessage(msgManager.getMessage("usage"));
                 break;

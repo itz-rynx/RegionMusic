@@ -149,10 +149,14 @@ public class MusicManager {
         
         // Lấy tên hiển thị của bài nhạc
         String displayName = configManager.getDisplayNameForMusic(musicName);
+        String durationFormatted = formatDuration(interval);
         
-        // Hiển thị thông báo đang phát bài
+        // Hiển thị thông báo đang phát bài (placeholders: {song}, {duration}, {duration_seconds})
         if (messageManager != null) {
-            String message = messageManager.getMessage("now-playing", "{song}", displayName);
+            String message = messageManager.getMessage("now-playing",
+                    "{song}", displayName,
+                    "{duration}", durationFormatted,
+                    "{duration_seconds}", String.valueOf(interval));
             if (message != null && !message.isEmpty()) {
                 player.sendMessage(message);
             }
@@ -334,6 +338,14 @@ public class MusicManager {
                 playNextSong(player, currentRegion, musicList, nextIndex);
             }
         }.runTaskLater(plugin, 1L);
+    }
+    
+    /** Định dạng thời lượng từ giây sang "M:SS" (VD: 185 → "3:05"). */
+    private static String formatDuration(int totalSeconds) {
+        if (totalSeconds < 0) totalSeconds = 0;
+        int m = totalSeconds / 60;
+        int s = totalSeconds % 60;
+        return m + ":" + (s < 10 ? "0" : "") + s;
     }
     
     /**

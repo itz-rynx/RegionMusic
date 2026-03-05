@@ -1,15 +1,16 @@
 {
-  "version": "2.0",
-  "changelog": "Major update with Song Management GUI, edit/delete songs, multi-page interface, and enhanced safety features.",
+  "version": "2.1",
+  "changelog": "Hex colors (&#RRGGBB, &X, §X) in lang messages; now-playing placeholders: {song}, {duration}, {duration_seconds}.",
   "download_url": "https://www.spigotmc.org/resources/regionmusic.123456/download?version=latest",
-  "release_date": "2026-01-16",
+  "release_date": "2026-02-04",
   "features": [
+    "Hex & multi-format colors in messages (&#FFFFFF, &a, §f)",
+    "Now-playing placeholders: {song}, {duration} (M:SS), {duration_seconds}",
     "Song Management GUI (/regionmusic songs)",
     "Edit existing songs (/regionmusic editmusic)",
     "Delete songs with safety checks",
     "Multi-page GUI navigation",
-    "Enhanced UI design",
-    "Improved error handling"
+    "Enhanced UI design"
   ],
   "requirements": {
     "minecraft": "1.21+",
@@ -17,3 +18,4 @@
     "dependencies": ["WorldGuard"]
   }
 }
+

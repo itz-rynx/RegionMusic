@@ -1,10 +1,11 @@
 messages:
+  # 颜色: &#RRGGBB (十六进制) | &a &f (&) | §a §f (§) – 三种均可
   # Permission messages
   no-permission: "&c您没有权限使用此命令！"
   player-only: "&c此命令仅适用于玩家！"
   
   # Command usage
-  usage: "&c用法: /regionmusic <reload|playmusic|stopmusic|togglemusic|about>"
+  usage: "&c用法: /regionmusic <reload|playmusic|stopmusic|togglemusic|nextsong|about|gui|songs|addmusic|editmusic>"
   
   # Reload
   reload-success: "&a已重新加载 RegionMusic 配置！"
@@ -24,8 +25,8 @@ messages:
   nextsong-success: "&a已跳到下一首歌曲！"
   nextsong-no-region: "&c您不在有音乐的区域中！"
   
-  # Now playing
-  now-playing: "&a正在播放: &f{song}"
+  # Now playing – placeholders: {song}, {duration} (M:SS), {duration_seconds}
+  now-playing: "&a正在播放: &f{song} &7({duration})"
 
 
 
