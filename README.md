@@ -222,4 +222,4 @@ This project is licensed under the MIT License.
 
 **rynx**  
 - GitHub: [@rynx](https://github.com/itz-rynx)  
-- Discord: q.bao1702
+- Discord: [@qbao1702](https://discord.com/users/695998203065008178)
